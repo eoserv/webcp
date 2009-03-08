@@ -1,0 +1,20 @@
+<table id="characters">
+	<thead>
+		<tr>
+			<th>Name
+			<th>Title
+			<th>Gender
+			<th>Level
+			<th>Exp
+			<th>Rank
+<[foreach characters char]>
+	<tbody>
+		<tr>
+			<td><a href="character<[php]>?name=<[char.name]>"><[char.name]></a>
+			<td><[~char.title]>
+			<td><[char.gender]>
+			<td><[char.level]>
+			<td><[char.exp]>
+			<td><[char.admin]>
+<[endforeach]>
+</table>

@@ -1,0 +1,16 @@
+<table id="staff">
+	<thead>
+		<tr>
+			<th>Name
+			<th>Title
+			<th>Gender
+			<th>Rank
+<[foreach characters char]>
+	<tbody>
+		<tr>
+			<td><[char.name]>
+			<td><[~char.title]>
+			<td><[char.gender]>
+			<td><[char.admin]>
+<[endforeach]>
+</table>
