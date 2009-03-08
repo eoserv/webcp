@@ -25,10 +25,10 @@ foreach ($characters as &$character)
 	switch ($character['admin'])
 	{
 		case 0: $character['admin'] = 'Player'; break;
-		case 1: $character['admin'] = 'Light Guide'; break;
-		case 2: $character['admin'] = 'Guardian'; break;
-		case 3: $character['admin'] = 'Game Master'; break;
-		case 4: $character['admin'] = 'Heavy Game Master'; break;
+		case 1: $character['admin'] = 'Light Guide'; $character['gm'] = true; break;
+		case 2: $character['admin'] = 'Guardian'; $character['gm'] = true; break;
+		case 3: $character['admin'] = 'Game Master'; $character['gm'] = true; break;
+		case 4: $character['admin'] = 'Heavy Game Master'; $character['gm'] = true; break;
 	}
 }
 unset($character);
