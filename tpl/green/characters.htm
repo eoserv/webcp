@@ -10,11 +10,16 @@
 <[foreach characters char]>
 	<tbody>
 		<tr>
-			<td><a href="character<[php]>?name=<[char.name]>"><[char.name]></a>
+			<td><[if char.gm]><img src="./tpl/green/images/admin.gif"><[endif]><a href="character<[php]>?name=<[char.name]>"><[char.name]></a>
 			<td><[~char.title]>
+
 			<td><[char.gender]>
+
 			<td><[char.level]>
+
 			<td><[char.exp]>
+
 			<td><[char.admin]>
+
 <[endforeach]>
 </table>
