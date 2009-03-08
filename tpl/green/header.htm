@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<title><[sitename]> :: EOSERV Control Panel :: <[pagetitle]></title>
+<link rel="stylesheet" href="./tpl/green/style.css">
+
+<div id="header">
+<h1><a href="<[homeurl]>"><[sitename]></a></h1>
+<span id="subtitle">
+EOSERV Control Panel
+</span>
+<h2><[pagetitle]></h2>
+</div>
+
+<ul id="nav">
+	<li><a href="./index<[php]>">Home</a>
+	<li><a href="./players<[php]>">Top&nbsp;Players</a>
+	<li><a href="./guilds<[php]>">Top&nbsp;Guilds</a>
+	<li><a href="./staff<[php]>">Staff</a>
+	<li><a href="./stats<[php]>">Stats</a>
+</ul>
+
+<[if logged]>
+<ul id="nav" class="playernav">
+	<li><span><[username]></span>
+	<li><a href="./characters<[php]>">My&nbsp;Characters</a>
+	<!--<li><a href="./editacc<[php]>">Edit&nbsp;Details</a>-->
+	<!--<li><a href="./mail<[php]>">Mail</a>-->
+	<li><a href="./logout?csrf=<[csrf]>">Logout</a>
+</ul>
+<[endif]>
+
+<div id="article">
+<[if message]>
+<span class="message"><[message]></span>
+<[endif]>
+<div class="aside" id="status">
+<h3>Status</h3>
+<[statusstr]><br>
+<[if online]>
+<small>Online: <b><[onlinecharacters]></b>/<b><[maxplayers]></b></small>
+<[endif]>
+</div>
+
+<[if !logged]>
+<div class="aside">
+<h3>Login</h3>
+<form action="" method="POST">
+<input type="hidden" name="action" value="login">
+<label for="username">Username</label>
+<input type="text" name="username" id="username">
+<label for="password">Password</label>
+<input type="password" name="password" id="password">
+<input type="submit" id="submit" value="Login">
+</form>
+</div>
+<[endif]>

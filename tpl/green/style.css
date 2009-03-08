@@ -1,0 +1,229 @@
+body
+{
+	margin:1.5ex;
+	padding:0;
+	text-align:center;
+	font-size:12px;
+	font-family:sans-serif;
+	color:black;
+}
+
+a
+{
+	font-weight:bold;
+	color:#003300;
+}
+
+a:hover
+{
+	text-decoration:none;
+}
+
+#header, #nav, #article, #footer
+{
+	width:700px;
+	margin:0 auto;
+	text-align:left;
+	border:solid black 1px;
+	padding:0;
+}
+
+#header
+{
+	height:100px;
+	position:relative;
+	border-width:1px 1px 0 1px;
+	background-color:#DDFFDD;
+}
+
+#header *
+{
+	font-size:16px;
+}
+
+#header h1
+{
+	position:absolute;
+	top:4px;
+	right:4px;
+	margin:0;
+	padding:0;
+}
+
+#header h2
+{
+	position:absolute;
+	bottom:4px;
+	right:4px;
+	margin:0;
+	padding:0;
+}
+
+#header #subtitle
+{
+	font-size:18px;
+	position:absolute;
+	top:4px;
+	left:4px;
+}
+
+#nav
+{
+	list-style:none;
+	height:20px;
+	text-align:center;
+	border-width:1px 1px 0 1px;
+	background-color:#99CC99;
+}
+
+#nav li
+{
+	display:block;
+	float:left;
+	width:20%;
+	list-style:none;
+}
+
+#nav li a
+{
+	padding:2px 0;
+	display:block;
+	text-decoration:none;
+}
+
+#nav li span
+{
+	padding:1px 0;
+	display:block;
+	text-decoration:none;
+	font-size:125%;
+	font-weight:bold;
+}
+
+#nav li a:hover
+{
+	color:#225522;
+	background-color:#88BB88;
+}
+
+#article
+{
+	border-width:1px;
+	background-color:#DDFFDD;
+	width:696px;
+	padding:2px;
+	min-height:260px;
+	_height:260px;
+}
+
+.aside
+{
+	clear:right;
+	float:right;
+	width:140px;
+	border:solid black 1px;
+	background-color:#99CC99;
+	margin:2px;
+}
+
+.aside h3
+{
+	font-size:15px;
+	margin:0;
+	padding:2px;
+	text-align:center;
+	border:solid black 1px;
+	border-width:0 0 1px 0;
+	background-color:#88BB88;
+}
+
+.aside form
+{
+	margin:8px;
+	text-align:center;
+}
+
+.aside form label
+{
+	text-align:right;
+	display:block;
+	font-weight:bold;
+	margin-top:8px;
+}
+
+.aside form input
+{
+	width:100%;
+	margin:2px auto;
+	border:solid black 1px;
+	background-color:#EEFFEE;
+	color:black;
+}
+
+#footer
+{
+	font-size:11px;
+	text-align:center;
+	padding:2px 0;
+	background-color:#99CC99;
+	border-top-width:0;
+}
+
+#footer span
+{
+	display:block;
+}
+
+#status
+{
+	text-align:center;
+	font-size:125%;
+}
+
+.online
+{
+	font-weight:bold;
+	color:green;
+}
+
+.offline
+{
+	font-weight:bold;
+	color:red;
+}
+
+table
+{
+	min-width:60%;
+	_width:60%;
+	border-collapse:collapse;
+	margin:1.5em auto;
+}
+
+table th
+{
+	font-size:110%;
+	background-color:#88BB88;
+}
+
+table th, table td
+{
+	border:solid #003300 1px;
+	padding:3px;
+}
+
+.message
+{
+	display:block;
+	border:solid black 1px;
+	background-color:#BBEEBB;
+	margin:2px;
+	font-weight:bold;
+	padding:2px;
+	text-align:center;
+}
+
+.playernav
+{
+	border-top-width:0;
+}

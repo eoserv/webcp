@@ -1,0 +1,18 @@
+<table id="players">
+	<thead>
+		<tr>
+			<th>Name
+			<th>Title
+			<th>Gender
+			<th>Level
+			<th>Exp
+<[foreach characters char]>
+	<tbody>
+		<tr>
+			<td><[char.name]>
+			<td><[~char.title]>
+			<td><[char.gender]>
+			<td><[char.level]>
+			<td><[char.exp]>
+<[endforeach]>
+</table>
