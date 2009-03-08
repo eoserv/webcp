@@ -25,7 +25,7 @@ if (((isset($checkcsrf) && $checkcsrf) || $_SERVER['REQUEST_METHOD'] == 'POST') 
 
 $tpl->csrf = $sess->csrf = $csrf = mt_rand();
 
-$serverconn = fsockopen($serverhost, $serverport, $errno, $errstr, 0.5);
+$serverconn = @fsockopen($serverhost, $serverport, $errno, $errstr, 0.5);
 $tpl->online = $online = (bool)$serverconn;
 
 if ($online)
