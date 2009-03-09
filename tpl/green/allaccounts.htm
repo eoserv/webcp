@@ -1,0 +1,19 @@
+<table id="characters">
+	<thead>
+		<tr>
+			<th>Name
+			<th>Characters
+			<th>Computer Name
+			<th>HDID
+<[foreach accounts acc]>
+	<tbody>
+		<tr>
+			<td><a href="./gmaccount<[php]>?name=<[acc.username]>"><[acc.username]></a>
+			<td><[acc.characters]>
+
+			<td><[~acc.computer]>
+
+			<td><[acc.hdid_str]>
+
+<[endforeach]>
+</table>

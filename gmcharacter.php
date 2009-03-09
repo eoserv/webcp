@@ -12,6 +12,14 @@ if (!$logged)
 	exit;
 }
 
+if (!$GM)
+{
+	$tpl->message = 'You must be a Game Master to view this page.';
+	$tpl->Execute('header');
+	$tpl->Execute('footer');
+	exit;
+}
+
 if (empty($_GET['name']))
 {
 	$tpl->message = 'No character name specified.';
@@ -20,11 +28,11 @@ if (empty($_GET['name']))
 	exit;
 }
 
-$character = $db->SQL("SELECT * FROM characters WHERE name = '$' AND account = '$' LIMIT 1", strtolower($_GET['name']), $sess->username);
+$character = $db->SQL("SELECT * FROM characters WHERE name = '$' LIMIT 1", $_GET['name']);
 
 if (empty($character))
 {
-	$tpl->message = 'Character does not exist or is not yours.';
+	$tpl->message = 'Character does not exist.';
 	$tpl->Execute('header');
 	$tpl->Execute('footer');
 	exit;
@@ -71,6 +79,6 @@ $tpl->character = $character;
 
 $tpl->Execute('header');
 
-$tpl->Execute('gmcharacter');
+$tpl->Execute('character');
 
 $tpl->Execute('footer');

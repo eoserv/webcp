@@ -1,6 +1,6 @@
 <?php
 
-$pagetitle = 'My Characters';
+$pagetitle = 'All Characters';
 
 require 'common.php';
 
@@ -12,9 +12,17 @@ if (!$logged)
 	exit;
 }
 
+if (!$GM)
+{
+	$tpl->message = 'You must be a Game Master to view this page.';
+	$tpl->Execute('header');
+	$tpl->Execute('footer');
+	exit;
+}
+
 $tpl->Execute('header');
 
-$characters = $db->SQL("SELECT * FROM characters WHERE account = '$' ORDER BY exp DESC", $sess->username);
+$characters = $db->SQL("SELECT * FROM characters LIMIT 0,100");
 
 foreach ($characters as &$character)
 {
@@ -36,6 +44,6 @@ unset($character);
 
 $tpl->characters = $characters;
 
-$tpl->Execute('characters');
+$tpl->Execute('allcharacters');
 
 $tpl->Execute('footer');
