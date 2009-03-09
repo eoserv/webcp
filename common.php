@@ -1,5 +1,18 @@
 <?php
 
+define('ADMIN_HGM', 4);
+define('ADMIN_GM', 3);
+define('ADMIN_GUARDIAN', 2);
+define('ADMIN_GUIDE', 1);
+define('ADMIN_PLAYER', 0);
+
+define('RACE_WHITE', 0);
+define('RACE_YELLOW', 1);
+define('RACE_TAN', 2);
+define('RACE_PANDA', 3);
+define('RACE_SKELETON', 4);
+define('RACE_FISH', 5);
+
 require 'config.php';
 
 require 'class/Database.class.php';
@@ -67,6 +80,35 @@ if (isset($_REQUEST['action']))
 
 $tpl->logged = $logged = isset($sess->username);
 $tpl->username = $sess->username;
+$userdata = $db->SQL("SELECT * FROM accounts WHERE username = '$'", $sess->username);
+
+if ($logged && empty($userdata))
+{
+	$tpl->message = "Your account has been deleted, logging out...";
+	$tpl->logged = $logged = false;
+}
+
+$tpl->GM = $GM = false;
+
+if (isset($userdata[0]))
+{
+	$userdata = $userdata[0];
+	$chardata = $db->SQL("SELECT * FROM characters WHERE account = '$'", $sess->username);
+	foreach ($chardata as $cd)
+	{
+		if ($cd['admin'] >= ADMIN_GM)
+		{
+			$tpl->GM = $GM = true;
+		}
+	}
+}
+else
+{
+	$chardata = array();
+}
+
+$tpl->numchars = $numchars = count($chardata);
+$sess->userdata = $userdata;
 
 function trans_form($buffer)
 {

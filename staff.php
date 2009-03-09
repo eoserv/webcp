@@ -15,11 +15,12 @@ foreach ($characters as &$character)
 	$character['title'] = empty($character['title'])?'-':ucfirst($character['title']);
 	switch ($character['admin'])
 	{
-		case 0: $character['admin'] = 'Player'; break;
-		case 1: $character['admin'] = 'Light Guide'; break;
-		case 2: $character['admin'] = 'Guardian'; break;
-		case 3: $character['admin'] = 'Game Master'; break;
-		case 4: $character['admin'] = 'Heavy Game Master'; break;
+		case ADMIN_PLAYER: $character['admin_str'] = 'Player'; break;
+		case ADMIN_GUIDE: $character['admin_str'] = 'Light Guide'; break;
+		case ADMIN_GUARDIAN: $character['admin_str'] = 'Guardian'; break;
+		case ADMIN_GM: $character['admin_str'] = 'Game Master'; break;
+		case ADMIN_HGM: $character['admin_str'] = 'High Game Master'; break;
+		default: $character['admin_str'] = 'Unknown'; break;
 	}
 }
 unset($character);

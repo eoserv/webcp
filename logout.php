@@ -6,9 +6,9 @@ $checkcsrf = true;
 require 'common.php';
 
 $tpl->message = 'Logged out.';
+$tpl->logged = $logged = false;
+unset($sess->username);
 
 $tpl->Execute('header');
-
-unset($sess->username);
 
 $tpl->Execute('footer');
