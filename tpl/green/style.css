@@ -227,3 +227,25 @@ table th, table td
 {
 	border-top-width:0;
 }
+
+hr
+{
+	height:1px;
+	border-style:none;
+	color:black;
+	background-color:black;
+	border-color:black;
+}
+
+#article > form > label
+{
+	display:inline-block;
+	width:18ex;
+	padding-bottom:6px;
+	text-align:right;
+}
+
+#article > form > input[type="text"], input[type="password"]
+{
+	width:30ex;
+}
