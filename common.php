@@ -1,5 +1,20 @@
 <?php
 
+if (!function_exists('hash'))
+{
+	exit("Could not find the the hash PHP extension.");
+}
+
+if (array_search('sha256',hash_algos()) === false)
+{
+	exit("Could not find the the sha256 hash algorithm.");
+}
+
+if (!function_exists('mysql_connect') && !class_exists('PDO'))
+{
+	exit("Could not find the the mysql or PDO PHP extensions.");
+}
+
 define('ADMIN_HGM', 4);
 define('ADMIN_GM', 3);
 define('ADMIN_GUARDIAN', 2);
@@ -62,7 +77,8 @@ if (isset($_REQUEST['action']))
 		case 'login':
 			if (isset($_POST['username'], $_POST['password']))
 			{
-				$checklogin = $db->SQL("SELECT username FROM accounts WHERE username = '$' AND password = '$'", strtolower($_POST['username']), substr($_POST['password'],0,12));
+				$password = hash('sha256','EOSERVMainPassw0rdsalt!!1'.strtolower($_POST['username']).substr($_POST['password'],0,12));
+				$checklogin = $db->SQL("SELECT username FROM accounts WHERE username = '$' AND password = '$'", strtolower($_POST['username']), $password);
 				if (empty($checklogin))
 				{
 					$tpl->message = "Login failed.";
