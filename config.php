@@ -1,9 +1,9 @@
 <?php
 
-$cpid = 'EOSERVMAIN'; // Used for the session ID
+$cpid = 'MyServerName'; // Used for the session ID
 
 $homeurl = 'http://game.endless-online.info/';
-$sitename = 'EOSERV Main';
+$sitename = 'My Server Name';
 
 $dbtype = 'mysql';
 $dbhost = 'localhost';
