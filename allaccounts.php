@@ -29,7 +29,6 @@ foreach ($accounts as &$account)
 	$account['hdid_str'] = sprintf("%08x", (double)$account['hdid']);
 	$account['hdid_str'] = strtoupper(substr($account['hdid_str'],0,4).'-'.substr($account['hdid_str'],4,4));
 	$account['characters'] = count($db->SQL("SELECT 1 FROM `characters` WHERE account = '$'", $account['username']));
-	//$hdid_str = 
 }
 unset($account);
 
