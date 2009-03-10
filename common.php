@@ -77,7 +77,7 @@ if (isset($_REQUEST['action']))
 		case 'login':
 			if (isset($_POST['username'], $_POST['password']))
 			{
-				$password = hash('sha256','EOSERVMainPassw0rdsalt!!1'.strtolower($_POST['username']).substr($_POST['password'],0,12));
+				$password = hash('sha256',$salt.strtolower($_POST['username']).substr($_POST['password'],0,12));
 				$checklogin = $db->SQL("SELECT username FROM accounts WHERE username = '$' AND password = '$'", strtolower($_POST['username']), $password);
 				if (empty($checklogin))
 				{
@@ -124,7 +124,7 @@ else
 }
 
 $tpl->numchars = $numchars = count($chardata);
-$sess->userdata = $userdata;
+$tpl->userdata = $sess->userdata = $userdata;
 
 function trans_form($buffer)
 {
