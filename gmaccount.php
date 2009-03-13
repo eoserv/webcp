@@ -28,6 +28,24 @@ if (empty($_GET['name']))
 	exit;
 }
 
+$account = $db->SQL("SELECT * FROM accounts WHERE username = '$'", strtolower($_GET['name']));
+if (empty($account[0]))
+{
+	$tpl->message = 'Account does not exist.';
+	$tpl->Execute('header');
+	$tpl->Execute('footer');
+	exit;
+}
+$account = $account[0];
+
+
+$account['hdid_str'] = sprintf("%08x", (double)$account['hdid']);
+$account['hdid_str'] = strtoupper(substr($account['hdid_str'],0,4).'-'.substr($account['hdid_str'],4,4));
+$account['created_str'] = date('r', $account['created']);
+$account['lastused_str'] = date('r', $account['lastused']);
+
+$tpl->account = $account;
+
 $characters = $db->SQL("SELECT * FROM characters WHERE account = '$' ORDER BY exp DESC", strtolower($_GET['name']));
 
 foreach ($characters as &$character)

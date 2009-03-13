@@ -105,6 +105,7 @@ if ($logged && empty($userdata))
 }
 
 $tpl->GM = $GM = false;
+$tpl->HGM = $HGM = false;
 
 if (isset($userdata[0]))
 {
@@ -115,6 +116,11 @@ if (isset($userdata[0]))
 		if ($cd['admin'] >= ADMIN_GM)
 		{
 			$tpl->GM = $GM = true;
+		}
+
+		if ($cd['admin'] >= ADMIN_HGM)
+		{
+			$tpl->HGM = $HGM = true;
 		}
 	}
 }

@@ -86,7 +86,7 @@ a:hover
 
 #nav li a
 {
-	padding:2px 0;
+	padding:2px 0 3px 0;
 	display:block;
 	text-decoration:none;
 }
@@ -204,6 +204,7 @@ table th
 {
 	font-size:110%;
 	background-color:#88BB88;
+	text-align:center;
 }
 
 table th, table td
@@ -223,7 +224,7 @@ table th, table td
 	text-align:center;
 }
 
-.playernav
+.playernav, .gmnav, .hgmnav
 {
 	border-top-width:0;
 }
@@ -248,4 +249,63 @@ hr
 #article > form > input[type="text"], input[type="password"]
 {
 	width:30ex;
+}
+
+#nav.playernav
+{
+	background-color:#BBCC99;
+}
+
+#nav.playernav li a
+{
+	color:#112200;
+}
+
+#nav.playernav li a:hover
+{
+	color:#225522;
+	background-color:#99AA77;
+}
+
+#nav.gmnav
+{
+	background-color:#CCBB88;
+}
+
+#nav.gmnav li a
+{
+	color:#221100;
+}
+
+#nav.gmnav li a:hover
+{
+	color:#334411;
+	background-color:#AA9966;
+}
+
+#nav.hgmnav
+{
+	background-color:#DD9966;
+}
+
+#nav.hgmnav li a
+{
+	color:#330000;
+}
+
+#nav.hgmnav li a:hover
+{
+	color:#443300;
+	background-color:#BB8855;
+}
+
+.search tbody td
+{
+	height:2.6em;
+	padding:0 2ex 0 1ex;
+}
+
+.search tbody td input, .search tbody td select
+{
+	width:100%;
 }
