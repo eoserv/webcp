@@ -55,6 +55,7 @@ switch ($character['race'])
 	case RACE_WHITE: $character['race'] = 'Human (White)'; break;
 	case RACE_YELLOW: $character['race'] = 'Human (Yellow)'; break;
 	case RACE_TAN: $character['race'] = 'Human (Tan)'; break;
+	case RACE_ORC: $character['race'] = 'Orc'; break;
 	case RACE_PANDA: $character['race'] = 'Panda'; break;
 	case RACE_SKELETON: $character['race'] = 'Skeleton'; break;
 	case RACE_FISH: $character['race'] = 'Fish'; break;
