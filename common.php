@@ -24,9 +24,10 @@ define('ADMIN_PLAYER', 0);
 define('RACE_WHITE', 0);
 define('RACE_YELLOW', 1);
 define('RACE_TAN', 2);
-define('RACE_PANDA', 3);
-define('RACE_SKELETON', 4);
-define('RACE_FISH', 5);
+define('RACE_ORC', 3);
+define('RACE_PANDA', 4);
+define('RACE_SKELETON', 5);
+define('RACE_FISH', 6);
 
 require 'config.php';
 
