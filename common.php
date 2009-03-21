@@ -1,5 +1,20 @@
 <?php
 
+function Number($b1, $b2 = 254, $b3 = 254, $b4 = 254)
+{
+	if ($b1 == 0 || $b1 == 254) $b1 = 1;
+	if ($b2 == 0 || $b2 == 254) $b2 = 1;
+	if ($b3 == 0 || $b3 == 254) $b3 = 1;
+	if ($b4 == 0 || $b4 == 254) $b4 = 1;
+
+	--$b1;
+	--$b2;
+	--$b3;
+	--$b4;
+
+	return ($b4*16194277 + $b3*64009 + $b2*253 + $b1);
+}
+
 if (!function_exists('hash'))
 {
 	exit("Could not find the the hash PHP extension.");
@@ -43,7 +58,7 @@ $tpl->pagetitle = $pagetitle;
 $tpl->sitename = $sitename;
 $tpl->homeurl = $homeurl;
 $tpl->php = $phpext;
-$tpl->onlinecharacters = '?';
+$tpl->onlinecharacters = 0;
 $tpl->maxplayers = $maxplayers;
 
 if (((isset($checkcsrf) && $checkcsrf) || $_SERVER['REQUEST_METHOD'] == 'POST') && (!isset($_REQUEST['csrf']) || !isset($sess->csrf) || $_REQUEST['csrf'] != $sess->csrf))
@@ -54,8 +69,66 @@ if (((isset($checkcsrf) && $checkcsrf) || $_SERVER['REQUEST_METHOD'] == 'POST') 
 
 $tpl->csrf = $sess->csrf = $csrf = mt_rand();
 
-$serverconn = @fsockopen($serverhost, $serverport, $errno, $errstr, 0.5);
-$tpl->online = $online = (bool)$serverconn;
+if (!file_exists('online.cache') || filemtime('online.cache')+$onlinecache < time())
+{
+	$serverconn = @fsockopen($serverhost, $serverport, $errno, $errstr, 0.5);
+	$tpl->online = $online = (bool)$serverconn;
+	$onlinelist = array();
+	if ($online)
+	{
+		$request_online = chr(3).chr(0).chr(1).chr(22);
+		fwrite($serverconn, $request_online);
+		usleep(200000); // Wait 200ms for the list
+		$raw = fread($serverconn, 1024*256); // Read up to 256KB of data
+		fclose($serverconn);
+		$raw = substr($raw, 5); // length, ID, replycode
+		$chars = Number(ord($raw[0]), ord($raw[1])); $raw = substr($raw, 2); // Number of characters
+		$raw = substr($raw, 1); // separator
+		for ($i = 0; $i < $chars; ++$i)
+		{
+			$newchar = array(
+				'name' => '',
+				'title' => '',
+				'admin' => '',
+				'class' => '',
+				'guild' => '',
+			);
+
+			$pos = strpos($raw, chr(255));
+			$newchar['name'] = substr($raw, 0, $pos);
+			$raw = substr($raw, $pos+1);
+
+			$pos = strpos($raw, chr(255));
+			$newchar['title'] = substr($raw, 0, $pos);
+			$raw = substr($raw, $pos+1);
+			
+			$raw = substr($raw, 1); // ?
+
+			$newchar['admin'] = Number(ord(substr($raw, 0, 1)));
+			$newchar['admin'] = ($newchar['admin'] == 4 || $newchar['admin'] == 5 || $newchar['admin'] == 9 || $newchar['admin'] == 10);
+			$raw = substr($raw, 1);
+
+			$newchar['class'] = Number(ord(substr($raw, 0, 1)));
+			$raw = substr($raw, 1);
+
+			$newchar['guild'] = trim(substr($raw, 0, 3));
+			$raw = substr($raw, 3);
+
+			$raw = substr($raw, 1); // separator
+
+			$onlinelist[] = $newchar;
+		}
+		ksort($onlinelist);
+		file_put_contents('online.cache', serialize($onlinelist));
+	}
+}
+else
+{
+	$tpl->online = $online = true;
+	$onlinelist = unserialize(file_get_contents('online.cache'));
+}
+
+$tpl->onlinecharacters = count($onlinelist);
 
 if ($online)
 {

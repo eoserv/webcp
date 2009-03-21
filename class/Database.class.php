@@ -1,7 +1,7 @@
 <?php
 /* This script is free to modify and distribute
 
-Current version: 1.3
+Current version: 1.4
 
 Updated 21 March 2009 (tehsausage@gmail.com) [1.4]
 	Strip null characters in Database::Escape()
