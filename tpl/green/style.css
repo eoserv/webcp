@@ -194,10 +194,10 @@ a:hover
 
 table
 {
-	min-width:60%;
-	_width:60%;
+	min-width:70%;
+	_width:70%;
 	border-collapse:collapse;
-	margin:1.5em auto;
+	margin:1.2em auto;
 }
 
 table th
@@ -308,4 +308,37 @@ hr
 .search tbody td input, .search tbody td select
 {
 	width:100%;
+}
+
+.showing
+{
+	display:block;
+	text-align:center;
+	margin:1ex 0;
+}
+
+.jumppage
+{
+	float:left;
+	font-size:125%;
+}
+
+.jumppage input
+{
+	font-size:75%;
+}
+
+.pagination
+{
+	clear:both;
+	display:block;
+	text-align:center;
+	font-size:110%;
+	word-spacing:0.5ex;
+	margin:0.3ex 0;
+}
+
+.pagination .current
+{
+	font-weight:bold;
 }

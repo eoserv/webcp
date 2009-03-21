@@ -1,3 +1,12 @@
+<div class="jumppage">
+<form action="" method="GET">
+<label for="page">Page:</label> <input type="text" name="page" id="page" value="<[page]>" size="3">/<[pages]> <input type="submit" value="Go">
+</form>
+</div>
+
+<span class="showing">Showing <[showing]> (<[start]> - <[end]>) of <[count]> characters.</span>
+<[pagination]>
+
 <table id="characters">
 	<thead>
 		<tr>
@@ -26,3 +35,6 @@
 
 <[endforeach]>
 </table>
+
+<[pagination]>
+<span class="showing">Showing <[showing]> (<[start]> - <[end]>) of <[count]> characters.</span>

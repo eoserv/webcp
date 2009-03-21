@@ -21,8 +21,20 @@ if (!$GM)
 }
 
 $tpl->Execute('header');
+$count = $db->SQL('SELECT COUNT(1) as count FROM characters');
+$count = $count[0]['count'];
 
-$characters = $db->SQL("SELECT * FROM characters LIMIT 0,100");
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
+$pages = ceil($count / $perpage);
+
+if ($page < 1 || $page > $pages)
+{
+	$page = max(min($page, $pages), 1);
+}
+
+$start = ($page-1) * $perpage;
+
+$characters = $db->SQL("SELECT * FROM characters LIMIT #,#", $start, $perpage);
 
 foreach ($characters as &$character)
 {
@@ -41,6 +53,17 @@ foreach ($characters as &$character)
 	}
 }
 unset($character);
+
+$pagination = generate_pagination($pages, $page);
+
+$tpl->page = $page;
+$tpl->pages = $pages;
+$tpl->pagination = $pagination;
+$tpl->perpage = $perpage;
+$tpl->showing = count($characters);
+$tpl->start = $start+1;
+$tpl->end = min($start+$perpage, $count);
+$tpl->count = $count;
 
 $tpl->characters = $characters;
 
