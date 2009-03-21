@@ -1,0 +1,18 @@
+
+<table id="players">
+	<thead>
+		<tr>
+			<th>Name
+			<th>Title
+			<th>Guild
+	<tbody>
+<[foreach characters char]>
+		<tr>
+			<td><[if char.admin]><img src="./tpl/green/images/admin.gif"><[endif]><[char.name]>
+
+			<td><[~char.title]>
+
+			<td><[char.guild]>
+
+<[endforeach]>
+</table>
