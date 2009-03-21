@@ -21,3 +21,7 @@ $serverhost = 'localhost';
 $serverport = 8078;
 
 $maxplayers = 200;
+
+$perpage = 100;
+$topplayers = 100;
+$topguilds = 100;

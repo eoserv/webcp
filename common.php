@@ -141,3 +141,53 @@ function trans_form($buffer)
 }
 
 ob_start('trans_form',0);
+
+function generate_pagination($pages, $page)
+{
+	$ret = "<div class=\"pagination\">";
+	if ($page == 1)
+	{
+		$ret .= "&lt;&lt; ";
+	}
+	else
+	{
+		$ret .= "<a href=\"?page=".($page-1)."\">&lt;&lt;</a> ";
+	}
+	$elip = false;
+	for ($i = 1; $i <= $pages; ++$i)
+	{
+		if ($pages < 15 || abs($i - $page) < 3 || abs($i - $pages) < 2 || abs($i - 1) < 2)
+		{
+			if ($i == $page)
+			{
+				$ret .= "<span class=\"current\">$i</span> ";
+			}
+			else
+			{
+				$ret .= "<a href=\"?page=$i\">$i</a> ";
+			}
+			$elip = true;
+		}
+		else
+		{
+			if ($elip)
+			{
+				$ret .= "... ";
+				$elip = false;
+			}
+		}
+	}
+	
+	if ($page == $pages)
+	{
+		$ret .= "&gt;&gt;";
+	}
+	else
+	{
+		$ret .= "<a href=\"?page=".($page+1)."\">&gt;&gt;</a>";
+	}
+	
+	$ret .= "</div>";
+
+	return $ret;
+}

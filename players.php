@@ -6,8 +6,8 @@ require 'common.php';
 
 $tpl->Execute('header');
 
-$tpl->limitcharacters = 100;
-$characters = $db->SQL("SELECT name, title, level, exp, gender FROM characters WHERE admin = 0 ORDER BY exp DESC LIMIT {$tpl->limitcharacters}");
+$tpl->limit = $topplayers;
+$characters = $db->SQL("SELECT name, title, level, exp, gender FROM characters WHERE admin = 0 ORDER BY exp DESC LIMIT #", $topplayers);
 
 foreach ($characters as &$character)
 {

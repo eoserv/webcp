@@ -3,6 +3,8 @@
 
 Current version: 1.3
 
+Updated 21 March 2009 (tehsausage@gmail.com) [1.4]
+	Strip null characters in Database::Escape()
 Updated 24th August 2008 (tehsausage@gmail.com) [1.3]
 	Fixed critical exploit - $ and # weren't escaped by Database::Escape()
 Updated 17th May 2008 (tehsausage@gmail.com) [1.2]
@@ -55,10 +57,11 @@ class Database{
 	function Escape($str){
 		switch ($this->type){
 			case 'sqlite':
-				return str_replace(array("'",'$','#'),array("''",'$$','##'),$str);
+				return str_replace(array("'",'$','#',chr(0)),array("''",'$$','##',''),$str);
 				break;
 			case 'mysql':
-				return mysql_real_escape_string($str,$this->db);
+				return str_replace(chr(0),'',mysql_real_escape_string($str,$this->db));
+				break;
 		}
 		
 	}
