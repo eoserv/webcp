@@ -18,7 +18,7 @@ $i = 0;
 foreach ($guilds as &$guild)
 {
 	$members = $db->SQL("SELECT 1 FROM characters WHERE guild = '$'", $guild['tag']);
-	$totalexp = $db->SQL("SELECT SUM(exp) as totalexp FROM characters WHERE guild = '$'", $guild['tag']);
+	$totalexp = $db->SQL("SELECT SUM(exp) as totalexp FROM characters WHERE guild = '$' AND admin = 0", $guild['tag']);
 	$guild['exp'] = $totalexp[0]['totalexp'];
 	$guild['tag'] = trim(strtoupper($guild['tag']));
 	$guild['name'] = ucfirst($guild['name']);

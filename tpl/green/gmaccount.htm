@@ -1,12 +1,23 @@
-<ul class="accountinfo">
-	<li>Computer Name: <[account.computer]>
-	<li>HDID: <[account.hdid_str]>
-	<li>Registered: <[account.created_str]>
-	<li>Last Used: <[account.lastused_str]>
-</ul>
+<table id="account">
+	<thead>
+		<tr>
+			<th colspan="2"><[account.username]>
+
+	<tbody>
+		<tr><th>Computer Name<td><[~account.computer]>
+
+		<tr><th>HDID<td><[account.hdid_str]>
+
+		<tr><th>Registered<td><[account.created_str]>
+
+		<tr><th>Last Used<td><[account.lastused_str]>
+
+</table>
 
 <table id="characters">
 	<thead>
+		<tr>
+			<th colspan="6">Characters
 		<tr>
 			<th>Name
 			<th>Title
@@ -17,7 +28,8 @@
 	<tbody>
 <[foreach characters char]>
 		<tr>
-			<td><[if char.gm]><img src="./tpl/green/images/admin.gif"><[endif]><a href="./gmcharacter<[php]>?name=<[char.name]>"><[char.name]></a>
+			<td><a href="./gmcharacter<[php]>?name=<[char.name]>"><[char.name]></a><[if char.gm]> <img src="./tpl/green/images/admin.gif"><[endif]>
+
 			<td><[~char.title]>
 
 			<td><[char.gender]>

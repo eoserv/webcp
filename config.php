@@ -27,3 +27,6 @@ $topplayers = 100;
 $topguilds = 100;
 
 $onlinecache = 600;
+
+$pubfiles = './pub'; // No trailing slash
+$pubcache = true;

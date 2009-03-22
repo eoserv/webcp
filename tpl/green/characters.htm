@@ -10,7 +10,8 @@
 	<tbody>
 <[foreach characters char]>
 		<tr>
-			<td><[if char.gm]><img src="./tpl/green/images/admin.gif"><[endif]><a href="./character<[php]>?name=<[char.name]>"><[char.name]></a>
+			<td><a href="./character<[php]>?name=<[char.name]>"><[char.name]></a><[if char.gm]> <img src="./tpl/green/images/admin.gif"><[endif]>
+
 			<td><[~char.title]>
 
 			<td><[char.gender]>

@@ -34,15 +34,8 @@ if (isset($_POST['name']))
 		$character['gender'] = $character['gender']?'Male':'Female';
 		$character['title'] = empty($character['title'])?'-':ucfirst($character['title']);
 		$character['exp'] = number_format($character['exp']);
-		switch ($character['admin'])
-		{
-			case ADMIN_PLAYER: $character['admin_str'] = 'Player'; break;
-			case ADMIN_GUIDE: $character['admin_str'] = 'Light Guide'; $character['gm'] = true; break;
-			case ADMIN_GUARDIAN: $character['admin_str'] = 'Guardian'; $character['gm'] = true; break;
-			case ADMIN_GM: $character['admin_str'] = 'Game Master'; $character['gm'] = true; break;
-			case ADMIN_HGM: $character['admin_str'] = 'High Game Master'; $character['gm'] = true; break;
-			default: $character['admin_str'] = 'Unknown'; break;
-		}
+		$character['gm'] = $character['admin'] > 0;
+		$character['admin_str'] = adminrank_str($character['admin']);
 	}
 	unset($character);
 

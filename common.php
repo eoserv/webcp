@@ -60,6 +60,54 @@ $tpl->homeurl = $homeurl;
 $tpl->php = $phpext;
 $tpl->onlinecharacters = 0;
 $tpl->maxplayers = $maxplayers;
+$tpl->serverhost = $serverhost;
+$tpl->serverport = $serverport;
+
+
+if (!is_dir($pubfiles))
+{
+	exit("Directory not found: $pubfiles");
+}
+
+if (!is_file($pubfiles.'/dat001.eif'))
+{
+	exit("File not found: $pubfiles/dat001.eif");
+}
+
+if (!is_file($pubfiles.'/dat001.ecf'))
+{
+	exit("File not found: $pubfiles/dat001.ecf");
+}
+
+require 'class/EIFReader.class.php';
+
+if ($pubcache && file_exists('eif.cache') && filemtime('eif.cache') < filemtime($pubfiles.'/dat001.eif'))
+{
+	$eoserv_items = unserialize(file_get_contents('eif.cache'));
+}
+else
+{
+	$eoserv_items = new EIFReader("$pubfiles/dat001.eif");
+	if ($pubcache)
+	{
+		file_put_contents('eif.cache', serialize($eoserv_items));
+	}
+}
+
+require 'class/ECFReader.class.php';
+
+if ($pubcache && file_exists('ecf.cache') && filemtime('ecf.cache') < filemtime($pubfiles.'/dat001.ecf'))
+{
+	$eoserv_classes = unserialize(file_get_contents('ecf.cache'));
+}
+else
+{
+	$eoserv_classes = new ECFReader("$pubfiles/dat001.ecf");
+	if ($pubcache)
+	{
+		file_put_contents('ecf.cache', serialize($eoserv_classes));
+	}
+}
 
 if (((isset($checkcsrf) && $checkcsrf) || $_SERVER['REQUEST_METHOD'] == 'POST') && (!isset($_REQUEST['csrf']) || !isset($sess->csrf) || $_REQUEST['csrf'] != $sess->csrf))
 {
@@ -263,4 +311,158 @@ function generate_pagination($pages, $page)
 	$ret .= "</div>";
 
 	return $ret;
+}
+
+function unserialize_inventory($str)
+{
+global $eoserv_items;
+	$items = explode(';', $str);
+	array_pop($items);
+
+	foreach ($items as &$item)
+	{
+		$xitem = explode(',', $item);
+		$item = array(
+			'id' => (int)$xitem[0],
+			'name' => $eoserv_items->Get($xitem[0])->name,
+			'amount' => $xitem[1]
+		);
+	}
+	unset($item);
+	
+	return $items;
+}
+
+function unserialize_paperdoll($str)
+{
+global $eoserv_items;
+	$items = explode(',', $str);
+	array_pop($items);
+	
+	if (count($items) != 15)
+	{
+		$items = array_fill(0, 15, 0);
+	}
+
+	foreach ($items as &$item)
+	{
+		$item = array(
+			'id' => (int)$item,
+			'slot' => EIFReader::TypeString($eoserv_items->Get($item)->type),
+			'name' => $eoserv_items->Get($item)->name
+		);
+	}
+	unset($item);
+
+	return $items;
+}
+
+function unserialize_guildranks($str)
+{
+global $eoserv_items;
+	$ranks = explode(',', $str);
+	array_pop($ranks);
+	
+	if (count($ranks) != 9)
+	{
+		$ranks = array_fill(0, 9, 0);
+	}
+
+	return $ranks;
+}
+
+function unserialize_spells()
+{
+	return array();
+}
+
+function karma_str($karma)
+{
+	// NOTE: These values are unconfirmed guesses
+	$table = array(
+		0    => 'Demonic',
+		250  => 'Doomed',
+		500  => 'Cursed',
+		750  => 'Evil',
+		1000 => 'Neutral',
+		1250 => 'Good',
+		1500 => 'Blessed',
+		1750 => 'Saint',
+		2000 => 'Pure'
+	);
+	
+	$last = $table[0];
+	
+	foreach ($table as $k => $v)
+	{
+		if ($karma < $k)
+		{
+			return $last;
+		}
+		$last = $v;
+	}
+	
+	return $last;
+}
+
+function haircolor_str($color)
+{
+	$table = array(
+		'Brown',
+		'Green',
+		'Pink',
+		'Red',
+		'Yellow',
+		'Blue',
+		'Purple',
+		'Luna',
+		'White',
+		'Black'
+	);
+	
+	return isset($table[$color])?$table[$color]:'Unknown';
+}
+
+function race_str($race)
+{
+	$table = array(
+		'Human (White)',
+		'Human (Yellow)',
+		'Human (Tan)',
+		'Orc',
+		'Panda',
+		'Skeleton',
+		'Fish'
+	);
+	
+	return isset($table[$race])?$table[$race]:'Unknown';
+}
+
+function adminrank_str($admin)
+{
+	$table = array(
+		'Player',
+		'Light Guide',
+		'Guardian',
+		'Game Master',
+		'High Game Master'
+	);
+	
+	return isset($table[$admin])?$table[$admin]:'Unknown';
+}
+
+function class_str($class)
+{
+global $eoserv_classes;
+	if ($class == 0)
+	{
+		return '-';
+	}
+	
+	return $eoserv_classes->Get($class)->name;
+}
+
+function guildrank_str($ranks, $rank)
+{
+	return isset($ranks[$rank-1])?$ranks[$rank-1]:'Unknown';
 }
