@@ -3,9 +3,10 @@ body
 	margin:1.5ex;
 	padding:0;
 	text-align:center;
-	font-size:12px;
-	font-family:sans-serif;
+	font-size:8.5pt;
+	font-family:Tahoma, Helvetica, Arial, Verdana, sans-serif;
 	color:black;
+	background-image:url('images/background.jpg');
 }
 
 a
@@ -28,12 +29,20 @@ a:hover
 	padding:0;
 }
 
+#header, #footer, #nav
+{
+	font-family:Helvetica, Arial, Verdana, Tahoma, sans-serif;
+	font-size:9pt;
+}
+
 #header
 {
-	height:100px;
+	height:5em;
 	position:relative;
 	border-width:1px 1px 0 1px;
 	background-color:#DDFFDD;
+	background-image:url('images/gradient.png');
+	background-repeat:repeat-x;
 }
 
 #header *
@@ -153,7 +162,7 @@ a:hover
 
 .aside form input
 {
-	width:100%;
+	width:95%;
 	margin:2px auto;
 	border:solid black 1px;
 	background-color:#EEFFEE;
@@ -163,15 +172,23 @@ a:hover
 #footer
 {
 	font-size:11px;
-	text-align:center;
-	padding:2px 0;
+	text-align:left;
+	padding:4px 8px;
 	background-color:#99CC99;
 	border-top-width:0;
+	width:676px;
+	background-image:url('images/gradient.png');
 }
 
 #footer span
 {
 	display:block;
+}
+
+#footer #copyright
+{
+	display:block;
+	float:right;
 }
 
 #status
@@ -197,7 +214,7 @@ table
 	min-width:70%;
 	_width:70%;
 	border-collapse:collapse;
-	margin:1.2em auto;
+	margin:1.2em 5ex;
 }
 
 table th
@@ -251,63 +268,70 @@ hr
 	width:30ex;
 }
 
-#nav.playernav
+.playernav
 {
-	background-color:#BBCC99;
+	background-color:#BBCC99 !important;
 }
 
-#nav.playernav li a
+.playernav li a
 {
-	color:#112200;
+	color:#112200 !important;
 }
 
-#nav.playernav li a:hover
+.playernav li a:hover
 {
-	color:#225522;
-	background-color:#99AA77;
+	color:#225522 !important;
+	background-color:#99AA77 !important;
 }
 
-#nav.gmnav
+.gmnav
 {
-	background-color:#CCBB88;
+	background-color:#CCBB88 !important;
 }
 
-#nav.gmnav li a
+.gmnav li a
 {
-	color:#221100;
+	color:#221100 !important;
 }
 
-#nav.gmnav li a:hover
+.gmnav li a:hover
 {
-	color:#334411;
-	background-color:#AA9966;
+	color:#334411 !important;
+	background-color:#AA9966 !important;
 }
 
-#nav.hgmnav
+.hgmnav
 {
-	background-color:#DD9966;
+	background-color:#DD9966 !important;
 }
 
-#nav.hgmnav li a
+.hgmnav li a
 {
-	color:#330000;
+	color:#330000 !important;
 }
 
-#nav.hgmnav li a:hover
+.hgmnav li a:hover
 {
-	color:#443300;
-	background-color:#BB8855;
+	color:#443300 !important;
+	background-color:#BB8855 !important;
 }
 
 .search tbody td
 {
 	height:2.6em;
 	padding:0 2ex 0 1ex;
+	_padding:0 0 0 1ex;
+}
+
+.search tbody th
+{
+	width:40%;
 }
 
 .search tbody td input, .search tbody td select
 {
 	width:100%;
+	_width:94%;
 }
 
 .showing
@@ -342,3 +366,14 @@ hr
 {
 	font-weight:bold;
 }
+
+table#character tbody th
+{
+	width:20%;
+}
+
+table#account tbody th
+{
+	width:25%;
+}
+

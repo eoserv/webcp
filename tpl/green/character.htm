@@ -1,31 +1,123 @@
-<h3><[character.name]></h3>
-<dir>
-	<ul>
-		<li>Gender: <b><[character.gender]></b>
-		<li>Race: <b><[character.race]></b>
-		<li>Class: <b><[character.class]></b>
-		<li>Hair: style:<b><[character.hairstyle]></b>, color:<b><[character.haircolor]></b>
-		<li>Title: <b><[~character.title]></b>
-		<li>Home: <b><[character.home]></b> (spawn map:<b><[character.spawnmap]></b>, x:<b><[character.spawnx]></b>, y:<b><[character.spawnx]></b>)
-		<li>Partner: <b><[character.partner]></b>
-		<li>Level: <b><[character.level]></b>
-		<li>EXP: <b><[character.exp]></b>
-		<li>Admin Rank: <b><[character.admin]></b> (<[character.admin_str]>)
-		<li>Location: map:<b><[character.map]></b>, x:<b><[character.x]></b>, y:<b><[character.x]></b>
-		<li>Stats
-		<ul>
-			<li>STR <b><[character.str]></b>
-			<li>INT <b><[character.int]></b>
-			<li>WIS <b><[character.wis]></b>
-			<li>AGI <b><[character.agi]></b>
-			<li>CON <b><[character.con]></b>
-			<li>CHA <b><[character.cha]></b>
-		</ul>
-		<li>Stat Points: <b><[character.statpoints]></b>
-		<li>Skill Points: <b><[character.skillpoints]></b>
-		<li>Karma: <b><[character.karma]></b> (0-2000)
-		<li>Max bank slots: <b><[character.bankmax]></b>
-		<li>Gold in bank: <b><[character.goldbank]></b>
-		<li>Usage: <b><[character.usage_str]></b>
-	</ul>
-</dir>
+<[if HGM]>
+<!--<ul class="hgmoptions">
+	<li><a href="editcharacter<[php]>?name=<[character.name]>">Edit Character</a>
+</ul>-->
+<[endif]>
+
+<table id="character">
+	<thead>
+		<tr><th colspan="3"><[character.name]> <a href="gmaccount<[php]>?name=<[character.account]>">(<[character.account]>)</a>
+	<tbody>
+		<tr><th>Level<td colspan="2"><[character.level]>
+
+		<tr><th>EXP<td colspan="2"><[character.exp]>
+
+		<tr><th>Admin Rank<td colspan="2"><[character.admin_str]> (<[character.admin]>)
+<[if character.guild]>
+		<tr><th rowspan="3">Guild<th>Tag<td><[character.guild]>
+
+		<tr><th>Name<td><[character.guild_name]>
+
+		<tr><th>Rank<td><[character.guild_rank_str]> (<[character.guild_rank]>)
+<[else]>
+		<tr><th>Guild<td colspan="2"><i>Not in guild</i>
+<[endif]>
+		<tr><th>Gender<td colspan="2"><[character.gender]>
+
+		<tr><th>Race<td colspan="2"><[character.race_str]>
+
+		<tr><th>Class<td colspan="2"><[character.class_str]>
+
+		<tr><th>Title<td colspan="2"><[~character.title]>
+
+		<tr><th>Partner<td colspan="2"><[character.partner]>
+
+		<tr><th rowspan="2">Hair<th>Style<td><[character.hairstyle]>
+
+		<tr><th>Color<td><[character.haircolor_str]>
+
+		<tr><th rowspan="4">Home<th>Name<td><[~character.home]>
+
+		<tr><th>Map<td><[character.spawnmap]>
+
+		<tr><th>X<td><[character.spawnx]>
+
+		<tr><th>Y<td><[character.spawny]>
+
+		<tr><th rowspan="3">Location<th>Map<td><[character.map]>
+
+		<tr><th>X<td><[character.x]>
+
+		<tr><th>Y<td><[character.y]>
+
+		<tr><th rowspan="6">Stats<th>STR<td><[character.str]>
+
+		<tr><th>INT<td><[character.int]>
+
+		<tr><th>WIS<td><[character.wis]>
+
+		<tr><th>AGI<td><[character.agi]>
+
+		<tr><th>CON<td><[character.con]>
+
+		<tr><th>CHA<td><[character.cha]>
+
+		<tr><th>Stat Points<td colspan="2"><[character.statpoints]>
+
+		<tr><th>Skill Points<td colspan="2"><[character.skillpoints]>
+
+		<tr><th>Karma<td colspan="2"><[character.karma_str]>
+
+		<tr><th>Usage<td colspan="2"><[character.usage_str]>
+
+		<tr><th>Bank Slots<td colspan="2"><[character.bankmax]>
+
+		<tr><th>Bank Gold<td colspan="2"><[character.goldbank]>
+
+</table>
+
+<table id="character-spells">
+	<thead>
+		<tr><th colspan="2">Spells
+		<tr><th>Spell<th>Skill Level
+	<tbody>
+<[foreach character.spells spell]>
+		<tr><td><[spell.name]><td><[spell.level]>
+
+<[endforeach]>
+</table>
+
+<table id="character-paperdoll">
+	<thead>
+		<tr><th colspan="2">Paperdoll
+		<tr><th>Slot<th>Item
+	<tbody>
+<[foreach character.paperdoll item]>
+<[if item.id]>
+		<tr><td><[item.slot]><td><[item.name]>
+
+<[endif]>
+<[endforeach]>
+</table>
+
+<table id="character-inventory">
+	<thead>
+		<tr><th colspan="2">Inventory
+		<tr><th>Item<th>Amount
+	<tbody>
+<[foreach character.inventory item]>
+		<tr><td><[item.name]><td><[item.amount]>
+
+<[endforeach]>
+</table>
+
+<table id="character-bank">
+	<thead>
+		<tr><th colspan="2">Bank
+		<tr><th>Item<th>Amount
+	<tbody>
+<[foreach character.bank item]>
+		<tr><td><[item.name]><td><[item.amount]>
+
+<[endforeach]>
+</table>

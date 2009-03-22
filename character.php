@@ -37,33 +37,26 @@ $character['gender'] = $character['gender']?'Male':'Female';
 $character['title'] = empty($character['title'])?'-':ucfirst($character['title']);
 $character['home'] = empty($character['home'])?'-':ucfirst($character['home']);
 $character['usage_str'] = floor($character['usage']/60).' hour(s)';
-switch ($character['class'])
+$character['karma_str'] = karma_str($character['karma']);
+$character['inventory'] = unserialize_inventory($character['inventory']);
+$character['bank'] = unserialize_inventory($character['bank']);
+$character['paperdoll'] = unserialize_paperdoll($character['paperdoll']);
+$character['spells'] = unserialize_spells($character['spells']);
+if (!empty($character['guild']))
 {
-	case 0: $character['class'] = 'Peasant'; break;
-	default: $character['class'] = 'Unknown'; break;
+	$guildinfo = $db->SQL("SELECT * FROM guilds WHERE tag = '$'", $character['guild']);
+	if (!empty($guildinfo[0]))
+	{
+		$character['guild_name'] = $guildinfo[0]['name'];
+		$character['guild_rank_str'] = guildrank_str(unserialize_guildranks($guildinfo[0]['ranks']), $character['guild_rank']);
+	}
 }
-switch ($character['race'])
-{
-	case RACE_WHITE: $character['race'] = 'Human (White)'; break;
-	case RACE_YELLOW: $character['race'] = 'Human (Yellow)'; break;
-	case RACE_TAN: $character['race'] = 'Human (Tan)'; break;
-	case RACE_ORC: $character['race'] = 'Orc'; break;
-	case RACE_PANDA: $character['race'] = 'Panda'; break;
-	case RACE_SKELETON: $character['race'] = 'Skeleton'; break;
-	case RACE_FISH: $character['race'] = 'Fish'; break;
-	default: $character['race'] = 'Unknown'; break;
-}
+$character['class_str'] = class_str($character['class']);
+$character['haircolor_str'] = haircolor_str($character['haircolor']);
+$character['race_str'] = race_str($character['race']);
 $character['partner'] = empty($character['partner'])?'-':ucfirst($character['partner']);
 $character['exp'] = number_format($character['exp']);
-switch ($character['admin'])
-{
-	case ADMIN_PLAYER: $character['admin_str'] = 'Player'; break;
-	case ADMIN_GUIDE: $character['admin_str'] = 'Light Guide'; break;
-	case ADMIN_GUARDIAN: $character['admin_str'] = 'Guardian'; break;
-	case ADMIN_GM: $character['admin_str'] = 'Game Master'; break;
-	case ADMIN_HGM: $character['admin_str'] = 'High Game Master'; break;
-	default: $character['admin_str'] = 'Unknown'; break;
-}
+$character['admin_str'] = adminrank_str($character['admin']);
 
 $pagetitle .= ': '.$character['name'];
 $tpl->pagetitle = $pagetitle;
@@ -72,6 +65,6 @@ $tpl->character = $character;
 
 $tpl->Execute('header');
 
-$tpl->Execute('gmcharacter');
+$tpl->Execute('character');
 
 $tpl->Execute('footer');

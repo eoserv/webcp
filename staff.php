@@ -13,15 +13,7 @@ foreach ($characters as &$character)
 	$character['name'] = ucfirst($character['name']);
 	$character['gender'] = $character['gender']?'Male':'Female';
 	$character['title'] = empty($character['title'])?'-':ucfirst($character['title']);
-	switch ($character['admin'])
-	{
-		case ADMIN_PLAYER: $character['admin_str'] = 'Player'; break;
-		case ADMIN_GUIDE: $character['admin_str'] = 'Light Guide'; break;
-		case ADMIN_GUARDIAN: $character['admin_str'] = 'Guardian'; break;
-		case ADMIN_GM: $character['admin_str'] = 'Game Master'; break;
-		case ADMIN_HGM: $character['admin_str'] = 'High Game Master'; break;
-		default: $character['admin_str'] = 'Unknown'; break;
-	}
+	$character['admin_str'] = adminrank_str($character['admin']);
 }
 unset($character);
 
