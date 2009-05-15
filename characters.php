@@ -7,12 +7,9 @@ require 'common.php';
 if (!$logged)
 {
 	$tpl->message = 'You must be logged in to view this page.';
-	$tpl->Execute('header');
-	$tpl->Execute('footer');
+	$tpl->Execute(null);
 	exit;
 }
-
-$tpl->Execute('header');
 
 $characters = $db->SQL("SELECT * FROM characters WHERE account = '$' ORDER BY exp DESC", $sess->username);
 
@@ -30,5 +27,3 @@ unset($character);
 $tpl->characters = $characters;
 
 $tpl->Execute('characters');
-
-$tpl->Execute('footer');

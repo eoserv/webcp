@@ -7,24 +7,21 @@ require 'common.php';
 if (!$logged)
 {
 	$tpl->message = 'You must be logged in to view this page.';
-	$tpl->Execute('header');
-	$tpl->Execute('footer');
+	$tpl->Execute(null);
 	exit;
 }
 
 if (!$GM)
 {
 	$tpl->message = 'You must be a Game Master to view this page.';
-	$tpl->Execute('header');
-	$tpl->Execute('footer');
+	$tpl->Execute(null);
 	exit;
 }
 
 if (empty($_GET['name']))
 {
 	$tpl->message = 'No character name specified.';
-	$tpl->Execute('header');
-	$tpl->Execute('footer');
+	$tpl->Execute(null);
 	exit;
 }
 
@@ -32,8 +29,7 @@ $account = $db->SQL("SELECT * FROM accounts WHERE username = '$'", strtolower($_
 if (empty($account[0]))
 {
 	$tpl->message = 'Account does not exist.';
-	$tpl->Execute('header');
-	$tpl->Execute('footer');
+	$tpl->Execute(null);
 	exit;
 }
 $account = $account[0];
@@ -64,8 +60,4 @@ $tpl->characters = $characters;
 $pagetitle .= ': '.htmlentities($_GET['name']);
 $tpl->pagetitle = $pagetitle;
 
-$tpl->Execute('header');
-
 $tpl->Execute('gmaccount');
-
-$tpl->Execute('footer');

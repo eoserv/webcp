@@ -1,8 +1,11 @@
 <?php
 /* This script is free to modify and distribute
 
-Current version: 1.2
+Current version: 1.3
 
+Updated 2nd April 2009 (tehsausage@gmail.com) [1.3]
+	Automatic header/footer inclusion
+	Global variable access
 Updated 5th December 2007 (tehsausage@gmail.com) [1.2]
 	Added support for htmlentities operator. <[~varname]>
 Updated 9th December 2007 (tehsausage@gmail.com) [1.1]
@@ -40,13 +43,20 @@ class Template{
 	const T_ENDFOREACH = 'endforeach';
 	protected $path = './tpl';
 	private $vars = array();
-	function __construct($path=null){
+	private $included_header = false;
+	private $included_footer = false;
+	function __construct($path=null, $autohead = false){
+		$this->included_header = $this->included_footer = !$autohead;
 		if ($path != null)
 			$this->path = $path;
 		if (!is_dir($this->path))
-			throw new Exception();
+			throw new Exception("Template directory does not exist");
 		if (!is_dir($this->path.'/compiled'))
 			mkdir($this->path.'/compiled');
+	}
+	function MainExecuted()
+	{
+		return $this->included_header;
 	}
 	static function Secure($data,$string=false){
 		if ($string) return addslashes($data);
@@ -66,14 +76,33 @@ class Template{
 	function Exists($file){
 		return file_exists($this->path.'/'.$file.'.htm');
 	}
-	function Execute($file){
-		if (!is_dir($this->path.DIRECTORY_SEPARATOR.dirname($file).'/compiled'))
-			mkdir($this->path.DIRECTORY_SEPARATOR.dirname($file).'/compiled');
-		if ($this->Compiled($file))
-			$this->Run($file);
-		elseif ($this->Exists($file)){
-			$this->Compile($file);
-			$this->Run($file);
+	function Execute($file, $maintpl = true){
+		if ($maintpl)
+		{
+			if (!$this->included_header)
+			{
+				$this->Execute('header', false);
+				$this->included_header = true;
+			}
+		}
+		if (!is_null($file))
+		{
+			if (!is_dir($this->path.DIRECTORY_SEPARATOR.dirname($file).'/compiled'))
+				mkdir($this->path.DIRECTORY_SEPARATOR.dirname($file).'/compiled');
+			if ($this->Compiled($file))
+				$this->Run($file);
+			elseif ($this->Exists($file)){
+				$this->Compile($file);
+				$this->Run($file);
+			}
+		}
+		if ($maintpl)
+		{
+			if (!$this->included_footer)
+			{
+				$this->Execute('footer', false);
+				$this->included_footer = true;
+			}
 		}
 	}
 	function Run($file){

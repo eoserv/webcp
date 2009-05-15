@@ -7,23 +7,26 @@ require 'common.php';
 if (!$logged)
 {
 	$tpl->message = 'You must be logged in to view this page.';
-	$tpl->Execute('header');
-	$tpl->Execute('footer');
+	$tpl->Execute(null);
 	exit;
 }
 
 if (!$GM)
 {
 	$tpl->message = 'You must be a Game Master to view this page.';
-	$tpl->Execute('header');
-	$tpl->Execute('footer');
+	$tpl->Execute(null);
 	exit;
 }
 
-$tpl->Execute('header');
-
 $count = $db->SQL('SELECT COUNT(1) as count FROM accounts');
 $count = $count[0]['count'];
+
+if ($count == 0)
+{
+	$tpl->message = 'No accounts have been created yet.';
+	$tpl->Execute(null);
+	return;
+}
 
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $pages = ceil($count / $perpage);
@@ -37,11 +40,36 @@ $start = ($page-1) * $perpage;
 
 $accounts = $db->SQL("SELECT * FROM accounts LIMIT #,#", $start, $perpage);
 
+$acclistq = '';
+
 foreach ($accounts as &$account)
 {
 	$account['hdid_str'] = sprintf("%08x", (double)$account['hdid']);
 	$account['hdid_str'] = strtoupper(substr($account['hdid_str'],0,4).'-'.substr($account['hdid_str'],4,4));
-	$account['characters'] = count($db->SQL("SELECT 1 FROM `characters` WHERE account = '$'", $account['username']));
+	$acclistq .= "account = '".$db->Escape($account['username'])."' OR ";
+}
+unset($account);
+
+$acclistq = substr($acclistq, 0, -4);
+
+if (!$acclistq)
+{
+	trigger_error("No accounts were selected");
+}
+
+$charcounts = $db->SQL("SELECT account FROM characters WHERE $acclistq");
+
+foreach ($accounts as $i => &$account)
+{
+	$charcount = 0;
+	foreach ($charcounts as $character)
+	{
+		if ($character['account'] == $account['username'])
+		{
+			++$charcount;
+		}
+	}
+	$account['characters'] = $charcount;
 }
 unset($account);
 
@@ -59,5 +87,3 @@ $tpl->count = $count;
 $tpl->accounts = $accounts;
 
 $tpl->Execute('allaccounts');
-
-$tpl->Execute('footer');

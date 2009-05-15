@@ -1,0 +1,56 @@
+<p>
+	Wildcard character is <b>%</b>
+
+<form action="./search<[php]>" method="GET">
+<input type="hidden" name="searchtype" value="account">
+
+<table class="search">
+	<caption>Account Search</caption>
+	<tbody>
+		<tr>
+			<th><label for="searchusername">Username</label>
+			<td><input type="text" name="username" id="searchusername" value="%">
+		<tr>
+			<th><label for="searchcomputer">Computer Name</label>
+			<td><input type="text" name="computer" id="searchcomputer" value="%">
+		<tr>
+			<th><label for="searchsearchhdid">HDID</label><br><small>Does not accept wildcards</small>
+			<td><input type="text" name="hdid" id="searchhdid" value="">
+		<tr>
+			<th colspan="2"><input type="submit" value="Search">
+</table>
+
+</form>
+
+<form action="./search<[php]>" method="GET">
+<input type="hidden" name="searchtype" value="character">
+
+<table class="search">
+	<caption>Character Search</caption>
+	<tbody>
+		<tr>
+			<th><label for="searchname">Name</label>
+			<td><input type="text" name="name" id="searchname" value="%">
+		<tr>
+			<th colspan="2"><input type="submit" value="Search">
+</table>
+
+</form>
+
+<form action="./search<[php]>" method="GET">
+<input type="hidden" name="searchtype" value="guild">
+
+<table class="search">
+	<caption>Guild Search</caption>
+	<tbody>
+		<tr>
+			<th><label for="searchname">Tag</label>
+			<td><input type="text" name="tag" id="searchtag" value="%" maxlength="3">
+		<tr>
+			<th><label for="searchname">Name</label>
+			<td><input type="text" name="name" id="searchname" value="%">
+		<tr>
+			<th colspan="2"><input type="submit" value="Search">
+</table>
+
+</form>

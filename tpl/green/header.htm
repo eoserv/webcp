@@ -10,7 +10,7 @@ EOSERV Control Panel
 <h2><[pagetitle]></h2>
 </div>
 
-<ul id="nav">
+<ul class="nav">
 	<li><a href="./index<[php]>">Home</a>
 	<li><a href="./players<[php]>">Top&nbsp;Players</a>
 	<li><a href="./guilds<[php]>">Top&nbsp;Guilds</a>
@@ -19,39 +19,57 @@ EOSERV Control Panel
 </ul>
 
 <[if logged]>
-<ul id="nav" class="playernav">
+<ul class="nav playernav">
 	<li><span><[username]></span>
-	<li><a href="./characters<[php]>">My&nbsp;Characters (<[numchars]>)</a>
-	<li><a href="./editacc<[php]>">Edit&nbsp;Details</a>
-	<!--<li><a href="./mail<[php]>">Mail</a>-->
+	<li><a href="./characters<[php]>">My&nbsp;Characters&nbsp;(<[numchars]>)</a>
+	<li><a href="./details<[php]>">Edit&nbsp;Details</a>
 	<li><a href="./logout<[php]>?csrf=<[csrf]>">Logout</a>
 </ul>
 <[endif]>
 
+<[foreach chardata_guilds guild tag]>
+<ul class="nav guildnav">
+	<li><span>Guild: <a href="./guild<[php]>?tag=<[tag]>"><[tag]></a></span>
+	<[if guild.leader]><li><a href="./editguild<[php]>?tag=<[tag]>">Edit&nbsp;Guild</a><[endif]>
+
+	<li><a href="./guildmembers<[php]>?tag=<[tag]>">Member&nbsp;List</a>
+	<li><a href="./guildsearch<[php]>?tag=<[tag]>">Member&nbsp;Search</a>
+</ul>
+<[endforeach]>
+
+<[if GUARDIAN]>
+<ul class="nav guardiannav">
+	<li><span>Guardian Tools</span>
+	<li><a href="./bans<[php]>">Ban&nbsp;Control</a>
+</ul>
+<[endif]>
+
 <[if GM]>
-<ul id="nav" class="gmnav">
+<ul class="nav gmnav">
 	<li><span>GM Tools</span>
 	<li><a href="./allaccounts<[php]>">All&nbsp;Accounts</a>
 	<li><a href="./allcharacters<[php]>">All&nbsp;Characters</a>
-	<li><a href="./accsearch<[php]>">Account&nbsp;Search</a>
-	<li><a href="./charsearch<[php]>">Character&nbsp;Search</a>
+	<li><a href="./allguilds<[php]>">All&nbsp;Guilds</a>
+	<li><a href="./search<[php]>">Search</a>
 </ul>
 <[endif]>
 
 <[if HGM]>
-<!--
-<ul id="nav" class="hgmnav">
+<ul class="nav hgmnav">
 	<li><span>HGM Tools</span>
-	<li><a href="./accedit<[php]>">Edit&nbsp;Account</a>
-	<li><a href="./charedit<[php]>">Edit&nbsp;Character</a>
 	<li><a href="./control<[php]>">Server&nbsp;Control</a>
 </ul>
--->
 <[endif]>
 
 <div id="article">
+
 <[if message]>
 <span class="message"><[message]></span>
+
+<[endif]>
+<[if error]>
+<span class="error"><[error]></span>
+
 <[endif]>
 <div class="aside" id="status">
 <h3>Server Status</h3>
@@ -62,9 +80,10 @@ EOSERV Control Panel
 </div>
 
 <[if !logged]>
+
 <div class="aside">
 <h3>Login</h3>
-<form action="" method="POST">
+<form action="<[if loggingout]>./<[endif]>" method="POST">
 <input type="hidden" name="action" value="login">
 <label for="username">Username</label>
 <input type="text" name="username" id="username">
