@@ -4,8 +4,6 @@ $pagetitle = 'Home';
 
 require 'common.php';
 
-$tpl->Execute('header');
-
 $accounts = $db->SQL('SELECT COUNT(1) as count FROM accounts');
 $accounts = $accounts[0]['count'];
 
@@ -30,5 +28,3 @@ $tpl->guilds = number_format($guilds);
 $tpl->bank = number_format($bank);
 
 $tpl->Execute('index');
-
-$tpl->Execute('footer');

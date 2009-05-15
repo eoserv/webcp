@@ -1,10 +1,20 @@
+
+<div class="jumppage">
+<form action="" method="GET">
+<input type="hidden" name="searchtype" value="character">
+<input type="hidden" name="name" value="<[~_GET.name]>">
+<label for="page">Page:</label> <input type="text" name="page" id="page" value="<[page]>" size="3">/<[pages]> <input type="submit" value="Go">
+</form>
+</div>
+
+<span class="showing">Showing <[showing]> (<[start]> - <[end]>) of <[count]> characters.</span>
+<[pagination]>
+
 <table id="characters">
 	<thead>
 		<tr>
 			<th>Name
 			<th>Account
-			<th>Title
-			<th>Gender
 			<th>Level
 			<th>Exp
 			<th>Rank
@@ -15,10 +25,6 @@
 
 			<td><a href="./gmaccount<[php]>?name=<[char.account]>"><[char.account]></a>
 
-			<td><[~char.title]>
-
-			<td><[char.gender]>
-
 			<td><[char.level]>
 
 			<td><[char.exp]>
@@ -27,3 +33,6 @@
 
 <[endforeach]>
 </table>
+
+<[pagination]>
+<span class="showing">Showing <[showing]> (<[start]> - <[end]>) of <[count]> characters.</span>

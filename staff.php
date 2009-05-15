@@ -4,9 +4,15 @@ $pagetitle = 'Staff Characters';
 
 require 'common.php';
 
-$tpl->Execute('header');
-
 $characters = $db->SQL("SELECT name, gender, title, admin FROM characters WHERE admin > 0 ORDER BY admin DESC");
+
+if (empty($characters))
+{
+	$tpl->message = "There are no staff characters.";
+	$tpl->Execute(null);
+	exit;
+}
+
 
 foreach ($characters as &$character)
 {
@@ -20,5 +26,3 @@ unset($character);
 $tpl->characters = $characters;
 
 $tpl->Execute('staff');
-
-$tpl->Execute('footer');

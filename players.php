@@ -4,8 +4,6 @@ $pagetitle = 'Top Players';
 
 require 'common.php';
 
-$tpl->Execute('header');
-
 $tpl->limit = $topplayers;
 $characters = $db->SQL("SELECT name, title, level, exp, gender FROM characters WHERE admin = 0 ORDER BY exp DESC LIMIT #", $topplayers);
 
@@ -21,5 +19,3 @@ unset($character);
 $tpl->characters = $characters;
 
 $tpl->Execute('players');
-
-$tpl->Execute('footer');

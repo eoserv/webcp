@@ -7,20 +7,17 @@ require 'common.php';
 if (!$logged)
 {
 	$tpl->message = 'You must be logged in to view this page.';
-	$tpl->Execute('header');
-	$tpl->Execute('footer');
+	$tpl->Execute(null);
 	exit;
 }
 
 if (!$GM)
 {
 	$tpl->message = 'You must be a Game Master to view this page.';
-	$tpl->Execute('header');
-	$tpl->Execute('footer');
+	$tpl->Execute(null);
 	exit;
 }
 
-$tpl->Execute('header');
 $count = $db->SQL('SELECT COUNT(1) as count FROM characters');
 $count = $count[0]['count'];
 
@@ -61,5 +58,3 @@ $tpl->count = $count;
 $tpl->characters = $characters;
 
 $tpl->Execute('allcharacters');
-
-$tpl->Execute('footer');

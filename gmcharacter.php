@@ -2,29 +2,27 @@
 
 $pagetitle = 'Character';
 
+$NEEDPUB = true;
 require 'common.php';
 
 if (!$logged)
 {
 	$tpl->message = 'You must be logged in to view this page.';
-	$tpl->Execute('header');
-	$tpl->Execute('footer');
+	$tpl->Execute(null);
 	exit;
 }
 
 if (!$GM)
 {
 	$tpl->message = 'You must be a Game Master to view this page.';
-	$tpl->Execute('header');
-	$tpl->Execute('footer');
+	$tpl->Execute(null);
 	exit;
 }
 
 if (empty($_GET['name']))
 {
 	$tpl->message = 'No character name specified.';
-	$tpl->Execute('header');
-	$tpl->Execute('footer');
+	$tpl->Execute(null);
 	exit;
 }
 
@@ -33,8 +31,7 @@ $character = $db->SQL("SELECT * FROM characters WHERE name = '$' LIMIT 1", $_GET
 if (empty($character))
 {
 	$tpl->message = 'Character does not exist.';
-	$tpl->Execute('header');
-	$tpl->Execute('footer');
+	$tpl->Execute(null);
 	exit;
 }
 
@@ -71,8 +68,4 @@ $tpl->pagetitle = $pagetitle;
 
 $tpl->character = $character;
 
-$tpl->Execute('header');
-
 $tpl->Execute('gmcharacter');
-
-$tpl->Execute('footer');

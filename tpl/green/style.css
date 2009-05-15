@@ -6,7 +6,7 @@ body
 	font-size:8.5pt;
 	font-family:Tahoma, Helvetica, Arial, Verdana, sans-serif;
 	color:black;
-	background-image:url('images/background.jpg');
+	background-image:url('./images/background.jpg');
 }
 
 a
@@ -20,7 +20,7 @@ a:hover
 	text-decoration:none;
 }
 
-#header, #nav, #article, #footer
+#header, .nav, #article, #footer
 {
 	width:700px;
 	margin:0 auto;
@@ -29,7 +29,7 @@ a:hover
 	padding:0;
 }
 
-#header, #footer, #nav
+#header, #footer, .nav
 {
 	font-family:Helvetica, Arial, Verdana, Tahoma, sans-serif;
 	font-size:9pt;
@@ -41,7 +41,7 @@ a:hover
 	position:relative;
 	border-width:1px 1px 0 1px;
 	background-color:#DDFFDD;
-	background-image:url('images/gradient.png');
+	background-image:url('./images/gradient.png');
 	background-repeat:repeat-x;
 }
 
@@ -76,7 +76,7 @@ a:hover
 	left:4px;
 }
 
-#nav
+.nav
 {
 	list-style:none;
 	height:20px;
@@ -85,7 +85,7 @@ a:hover
 	background-color:#99CC99;
 }
 
-#nav li
+.nav li
 {
 	display:block;
 	float:left;
@@ -93,14 +93,21 @@ a:hover
 	list-style:none;
 }
 
-#nav li a
+.nav li a
 {
 	padding:2px 0 3px 0;
 	display:block;
 	text-decoration:none;
 }
 
-#nav li span
+.nav li span a
+{
+	padding:0;
+	display:inline;
+	text-decoration:underline;
+}
+
+.nav li span
 {
 	padding:1px 0;
 	display:block;
@@ -109,7 +116,7 @@ a:hover
 	font-weight:bold;
 }
 
-#nav li a:hover
+.nav li a:hover
 {
 	color:#225522;
 	background-color:#88BB88;
@@ -177,7 +184,7 @@ a:hover
 	background-color:#99CC99;
 	border-top-width:0;
 	width:676px;
-	background-image:url('images/gradient.png');
+	background-image:url('./images/gradient.png');
 }
 
 #footer span
@@ -212,7 +219,7 @@ a:hover
 table
 {
 	min-width:70%;
-	_width:70%;
+	*width:70%;
 	border-collapse:collapse;
 	margin:1.2em 5ex;
 }
@@ -230,6 +237,13 @@ table th, table td
 	padding:3px;
 }
 
+table caption
+{
+	font-weight:bold;
+	font-size:110%;
+	margin:0.2ex;
+}
+
 .message
 {
 	display:block;
@@ -237,13 +251,22 @@ table th, table td
 	background-color:#BBEEBB;
 	margin:2px;
 	font-weight:bold;
-	padding:2px;
+	padding:4px;
 	text-align:center;
+	font-size:110%;
 }
 
-.playernav, .gmnav, .hgmnav
+.error
 {
-	border-top-width:0;
+	display:block;
+	border:solid black 1px;
+	background-color:#EEBBBB;
+	margin:2px;
+	font-weight:bold;
+	padding:4px;
+	text-align:center;
+	color:#CC0000;
+	font-size:110%;
 }
 
 hr
@@ -267,7 +290,7 @@ hr
 {
 	width:30ex;
 }
-
+ 
 .playernav
 {
 	background-color:#BBCC99 !important;
@@ -284,43 +307,75 @@ hr
 	background-color:#99AA77 !important;
 }
 
-.gmnav
+.guildnav
 {
 	background-color:#CCBB88 !important;
 }
 
-.gmnav li a
+.guildnav li a
 {
 	color:#221100 !important;
 }
 
-.gmnav li a:hover
+.guildnav li a:hover
 {
 	color:#334411 !important;
 	background-color:#AA9966 !important;
 }
 
-.hgmnav
+.guardiannav
 {
 	background-color:#DD9966 !important;
 }
 
-.hgmnav li a
+.guardiannav li a
 {
 	color:#330000 !important;
 }
 
-.hgmnav li a:hover
+.guardiannav li a:hover
 {
 	color:#443300 !important;
 	background-color:#BB8855 !important;
+}
+
+.gmnav
+{
+	background-color:#EE8855 !important;
+}
+
+.gmnav li a
+{
+	color:#550000 !important;
+}
+
+.gmnav li a:hover
+{
+	color:#552200 !important;
+	background-color:#CC7744 !important;
+}
+
+.hgmnav
+{
+	background-color:#FF7744 !important;
+}
+
+.hgmnav li a
+{
+	color:#660000 !important;
+}
+
+.hgmnav li a:hover
+{
+	color:#661100 !important;
+	background-color:#DD6633 !important;
 }
 
 .search tbody td
 {
 	height:2.6em;
 	padding:0 2ex 0 1ex;
-	_padding:0 0 0 1ex;
+	*padding:0 0 0 1ex;
 }
 
 .search tbody th
@@ -331,25 +386,26 @@ hr
 .search tbody td input, .search tbody td select
 {
 	width:100%;
-	_width:94%;
+	*width:94%;
 }
 
 .showing
 {
 	display:block;
 	text-align:center;
-	margin:1ex 0;
+	margin:2ex 0;
 }
 
 .jumppage
 {
 	float:left;
-	font-size:125%;
+	font-size:120%;
 }
 
 .jumppage input
 {
-	font-size:75%;
+	font-size:85%;
+	margin:0 1px 0 0;
 }
 
 .pagination
@@ -376,4 +432,3 @@ table#account tbody th
 {
 	width:25%;
 }
-

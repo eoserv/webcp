@@ -15,6 +15,49 @@ function Number($b1, $b2 = 254, $b3 = 254, $b4 = 254)
 	return ($b4*16194277 + $b3*64009 + $b2*253 + $b1);
 }
 
+function webcp_error_handler($errno, $errstr, $errfile, $errline)
+{
+	global $tpl;
+	$errfile = basename($errfile);
+	if ((error_reporting() & $errno) != $errno)
+	{
+		return;
+	}
+	if (isset($tpl) && !$tpl->MainExecuted())
+	{
+		$tpl->error = "$errstr ($errfile:$errline)";
+		$tpl->Execute('error');
+		exit;
+	}
+	else
+	{
+		exit("<br><b>Error:</b> $errstr ($errfile:$errline)<br>");
+	}
+}
+set_error_handler("webcp_error_handler");
+
+function webcp_exception_handler($e)
+{
+	$classname = 'Exception';
+	$reflector = new ReflectionClass($e);
+	$classname = $reflector->getName();
+	webcp_error_handler(E_ERROR, "Uncaught $classname: ".$e->getMessage(), $e->getFile(), $e->getLine());
+}
+set_exception_handler("webcp_exception_handler");
+
+function webcp_debug_info()
+{
+	global $db;
+	global $starttime;
+	$exectime = number_format((microtime(true) - $starttime)*1000, 1);
+	echo "Total execution time: $exectime ms<br>";
+	foreach ($db->Debug() as $query)
+	{
+		$exectime = number_format($query[1], 1);
+		echo htmlentities($query[0])." -- ($exectime ms)<br>";
+	}
+}
+
 if (!function_exists('hash'))
 {
 	exit("Could not find the the hash PHP extension.");
@@ -46,12 +89,25 @@ define('RACE_FISH', 6);
 
 require 'config.php';
 
+if (!empty($DEBUG))
+{
+	$starttime = microtime(true);
+	register_shutdown_function('webcp_debug_info');
+}
+
 require 'class/Database.class.php';
 require 'class/Template.class.php';
 require 'class/Session.class.php';
 
-$db = new Database($dbtype, $dbhost, $dbuser, $dbpass, $dbname);
-$tpl = new Template('tpl/'.$template);
+try
+{
+	$db = new Database($dbtype, $dbhost, $dbuser, $dbpass, $dbname);
+}
+catch (Exception $e)
+{
+	exit("Database connection failed. (".$e->getMessage().")");
+}
+$tpl = new Template('tpl/'.$template, true);
 $sess = new Session($cpid.'_EOSERVCP');
 
 $tpl->pagetitle = $pagetitle;
@@ -79,33 +135,36 @@ if (!is_file($pubfiles.'/dat001.ecf'))
 	exit("File not found: $pubfiles/dat001.ecf");
 }
 
-require 'class/EIFReader.class.php';
+if (!empty($NEEDPUB))
+{
+	require 'class/EIFReader.class.php';
 
-if ($pubcache && file_exists('eif.cache') && filemtime('eif.cache') < filemtime($pubfiles.'/dat001.eif'))
-{
-	$eoserv_items = unserialize(file_get_contents('eif.cache'));
-}
-else
-{
-	$eoserv_items = new EIFReader("$pubfiles/dat001.eif");
-	if ($pubcache)
+	if ($pubcache && file_exists('eif.cache') && filemtime('eif.cache') < filemtime($pubfiles.'/dat001.eif'))
 	{
-		file_put_contents('eif.cache', serialize($eoserv_items));
+		$eoserv_items = unserialize(file_get_contents('eif.cache'));
 	}
-}
-
-require 'class/ECFReader.class.php';
-
-if ($pubcache && file_exists('ecf.cache') && filemtime('ecf.cache') < filemtime($pubfiles.'/dat001.ecf'))
-{
-	$eoserv_classes = unserialize(file_get_contents('ecf.cache'));
-}
-else
-{
-	$eoserv_classes = new ECFReader("$pubfiles/dat001.ecf");
-	if ($pubcache)
+	else
 	{
-		file_put_contents('ecf.cache', serialize($eoserv_classes));
+		$eoserv_items = new EIFReader("$pubfiles/dat001.eif");
+		if ($pubcache)
+		{
+			file_put_contents('eif.cache', serialize($eoserv_items));
+		}
+	}
+
+	require 'class/ECFReader.class.php';
+
+	if ($pubcache && file_exists('ecf.cache') && filemtime('ecf.cache') < filemtime($pubfiles.'/dat001.ecf'))
+	{
+		$eoserv_classes = unserialize(file_get_contents('ecf.cache'));
+	}
+	else
+	{
+		$eoserv_classes = new ECFReader("$pubfiles/dat001.ecf");
+		if ($pubcache)
+		{
+			file_put_contents('ecf.cache', serialize($eoserv_classes));
+		}
 	}
 }
 
@@ -115,18 +174,24 @@ if (((isset($checkcsrf) && $checkcsrf) || $_SERVER['REQUEST_METHOD'] == 'POST') 
 	exit("<h1>400 - Bad Request</h1>");
 }
 
-$tpl->csrf = $sess->csrf = $csrf = mt_rand();
+if ($dynamiccsrf || !isset($sess->csrf))
+{
+	$tpl->csrf = $sess->csrf = $csrf = mt_rand();
+}
+else
+{
+	$tpl->csrf = $csrf = $sess->csrf;
+}
 
 if (!file_exists('online.cache') || filemtime('online.cache')+$onlinecache < time())
 {
-	$serverconn = @fsockopen($serverhost, $serverport, $errno, $errstr, 0.5);
+	$serverconn = @fsockopen($serverhost, $serverport, $errno, $errstr, 2.0);
 	$tpl->online = $online = (bool)$serverconn;
 	$onlinelist = array();
 	if ($online)
 	{
-		$request_online = chr(3).chr(0).chr(1).chr(22);
+		$request_online = chr(5).chr(254).chr(1).chr(22).chr(254).chr(255);
 		fwrite($serverconn, $request_online);
-		usleep(200000); // Wait 200ms for the list
 		$raw = fread($serverconn, 1024*256); // Read up to 256KB of data
 		fclose($serverconn);
 		$raw = substr($raw, 5); // length, ID, replycode
@@ -169,14 +234,26 @@ if (!file_exists('online.cache') || filemtime('online.cache')+$onlinecache < tim
 		ksort($onlinelist);
 		file_put_contents('online.cache', serialize($onlinelist));
 	}
+	else
+	{
+		file_put_contents('online.cache', 'OFFLINE');
+	}
 }
 else
 {
-	$tpl->online = $online = true;
-	$onlinelist = unserialize(file_get_contents('online.cache'));
+	$onlinedata = file_get_contents('online.cache');
+	if ($onlinedata == 'OFFLINE')
+	{
+		$tpl->online = $online = false;
+	}
+	else
+	{
+		$tpl->online = $online = true;
+		$onlinelist = unserialize($onlinedata);
+	}
 }
 
-$tpl->onlinecharacters = count($onlinelist);
+$tpl->onlinecharacters = isset($onlinelist)?count($onlinelist):0;
 
 if ($online)
 {
@@ -226,15 +303,22 @@ if ($logged && empty($userdata))
 	$tpl->logged = $logged = false;
 }
 
+$tpl->GUARDIAN = $GUARDIAN = false;
 $tpl->GM = $GM = false;
 $tpl->HGM = $HGM = false;
 
+$chardata_guilds = array();
 if (isset($userdata[0]))
 {
 	$userdata = $userdata[0];
 	$chardata = $db->SQL("SELECT * FROM characters WHERE account = '$'", $sess->username);
 	foreach ($chardata as $cd)
 	{
+		if ($cd['admin'] >= ADMIN_GUARDIAN)
+		{
+			$tpl->GUARDIAN = $GUARDIAN = true;
+		}
+
 		if ($cd['admin'] >= ADMIN_GM)
 		{
 			$tpl->GM = $GM = true;
@@ -243,6 +327,20 @@ if (isset($userdata[0]))
 		if ($cd['admin'] >= ADMIN_HGM)
 		{
 			$tpl->HGM = $HGM = true;
+		}
+		
+		if ($cd['guild'])
+		{
+			if (!isset($chardata_guilds[$cd['guild']]))
+			{
+				$chardata_guilds[$cd['guild']] = array(
+					'leader' => false
+				);
+			}
+			if ($cd['guild_rank'] == 1)
+			{
+				$chardata_guilds[$cd['guild']]['leader'] = true;
+			}
 		}
 	}
 }
@@ -253,6 +351,7 @@ else
 
 $tpl->numchars = $numchars = count($chardata);
 $tpl->userdata = $sess->userdata = $userdata;
+$tpl->chardata_guilds = $chardata_guilds;
 
 function trans_form($buffer)
 {
@@ -263,8 +362,16 @@ function trans_form($buffer)
 
 ob_start('trans_form',0);
 
-function generate_pagination($pages, $page)
+function generate_pagination($pages, $page, $prefix = '')
 {
+	if (strpos($prefix, '?') === false)
+	{
+		$prefix .= '?';
+	}
+	else
+	{
+		$prefix .= '&';
+	}
 	$ret = "<div class=\"pagination\">";
 	if ($page == 1)
 	{
@@ -272,7 +379,7 @@ function generate_pagination($pages, $page)
 	}
 	else
 	{
-		$ret .= "<a href=\"?page=".($page-1)."\">&lt;&lt;</a> ";
+		$ret .= "<a href=\"{$prefix}page=".($page-1)."\">&lt;&lt;</a> ";
 	}
 	$elip = false;
 	for ($i = 1; $i <= $pages; ++$i)
@@ -285,7 +392,7 @@ function generate_pagination($pages, $page)
 			}
 			else
 			{
-				$ret .= "<a href=\"?page=$i\">$i</a> ";
+				$ret .= "<a href=\"{$prefix}page=$i\">$i</a> ";
 			}
 			$elip = true;
 		}
@@ -305,7 +412,7 @@ function generate_pagination($pages, $page)
 	}
 	else
 	{
-		$ret .= "<a href=\"?page=".($page+1)."\">&gt;&gt;</a>";
+		$ret .= "<a href=\"{$prefix}page=".($page+1)."\">&gt;&gt;</a>";
 	}
 	
 	$ret .= "</div>";

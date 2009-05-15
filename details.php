@@ -7,8 +7,7 @@ require 'common.php';
 if (!$logged)
 {
 	$tpl->message = 'You must be logged in to view this page.';
-	$tpl->Execute('header');
-	$tpl->Execute('footer');
+	$tpl->Execute(null);
 	exit;
 }
 
@@ -74,8 +73,4 @@ if (!empty($_POST['currentpassword']) && !empty($_POST['newpassword']) && !empty
 	}
 }
 
-$tpl->Execute('header');
-
 $tpl->Execute('editacc');
-
-$tpl->Execute('footer');

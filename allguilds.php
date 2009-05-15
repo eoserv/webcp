@@ -5,12 +5,38 @@ function sort_exp($a, $b)
 	return $a['exp'] < $b['exp'];
 }
 
-$pagetitle = 'Top Guilds';
+$pagetitle = 'All Guilds';
 
 require 'common.php';
 
-$tpl->limit = $topguilds;
-$guilds = $db->SQL("SELECT tag, name FROM guilds");
+if (!$logged)
+{
+	$tpl->message = 'You must be logged in to view this page.';
+	$tpl->Execute(null);
+	exit;
+}
+
+if (!$GM)
+{
+	$tpl->message = 'You must be a Game Master to view this page.';
+	$tpl->Execute(null);
+	exit;
+}
+
+$count = $db->SQL('SELECT COUNT(1) as count FROM guilds');
+$count = $count[0]['count'];
+
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
+$pages = ceil($count / $perpage);
+
+if ($page < 1 || $page > $pages)
+{
+	$page = max(min($page, $pages), 1);
+}
+
+$start = ($page-1) * $perpage;
+
+$guilds = $db->SQL("SELECT * FROM guilds LIMIT #,#", $start, $perpage);
 
 if (empty($guilds))
 {
@@ -77,4 +103,17 @@ unset($guild);
 
 $tpl->guilds = $guilds;
 
-$tpl->Execute('guilds');
+$pagination = generate_pagination($pages, $page);
+
+$tpl->page = $page;
+$tpl->pages = $pages;
+$tpl->pagination = $pagination;
+$tpl->perpage = $perpage;
+$tpl->showing = count($guilds);
+$tpl->start = $start+1;
+$tpl->end = min($start+$perpage, $count);
+$tpl->count = $count;
+
+$tpl->guilds = $guilds;
+
+$tpl->Execute('allguilds');
