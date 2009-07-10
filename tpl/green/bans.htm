@@ -1,0 +1,48 @@
+<div class="jumppage">
+<form action="" method="GET">
+<label for="page">Page:</label> <input type="text" name="page" id="page" value="<[page]>" size="3">/<[pages]> <input type="submit" value="Go">
+</form>
+</div>
+
+<span class="showing">Showing <[showing]> (<[start]> - <[end]>) of <[count]> bans.</span>
+<[pagination]>
+
+<table id="bans">
+	<thead>
+		<tr>
+			<th>Username
+			<th>IP Address
+			<th>HDID
+			<th>Remaining
+			<th>Setter
+	<tbody>
+<[foreach bans ban]>
+		<tr>
+			<td><[if !ban.nouser]><a href="./gmaccount<[php]>?name=<[ban.username]>"><[endif]><[ban.username]><[if !ban.nouser]></a><[endif]>
+
+			<td><[ban.ip_str]>
+
+			<td><[~ban.hdid_str]>
+
+			<td><[ban.remaining]>
+
+			<td><a href="./gmcharacter<[php]>?name=<[ban.setter]>"><[ban.setter]></a>
+
+<[endforeach]>
+</table>
+
+<[pagination]>
+<span class="showing">Showing <[showing]> (<[start]> - <[end]>) of <[count]> bans.</span>
+
+<form action="./bans<[php]>" method="POST">
+<input type="hidden" name="action" value="unban">
+<input type="input" name="input">
+<input type="submit" name="unban-username" value="Unban by Username">
+<input type="submit" name="unban-ip" value="Unban by IP Address">
+<input type="submit" name="unban-hdid" value="Unban by HDID">
+</form>
+
+<form action="./bans<[php]>" method="POST">
+<input type="hidden" name="action" value="cleanup">
+<input type="submit" onclick="return confirm('This will remove all expired bans, continue?');" value="Delete expired bans">
+</form>

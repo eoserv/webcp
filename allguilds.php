@@ -1,10 +1,5 @@
 <?php
 
-function sort_exp($a, $b)
-{
-	return $a['exp'] < $b['exp'];
-}
-
 $pagetitle = 'All Guilds';
 
 require 'common.php';
@@ -89,10 +84,6 @@ foreach ($guilds as &$guild)
 	$guild['members'] = $members;
 }
 unset($guild);
-
-usort($guilds, 'sort_exp');
-
-$guilds = array_slice($guilds, 0, $topguilds);
 
 foreach ($guilds as &$guild)
 {
