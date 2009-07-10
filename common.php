@@ -15,6 +15,54 @@ function Number($b1, $b2 = 254, $b3 = 254, $b4 = 254)
 	return ($b4*16194277 + $b3*64009 + $b2*253 + $b1);
 }
 
+function timeago_full($pre,$now=NULL,$suffix=true)
+{
+	if ($now === NULL)
+	{
+		$now = time();
+	}
+
+	$times = array(
+		array(1,'second'),
+		array(60,'minute'),
+		array(60*60,'hour'),
+		array(24*60*60,'day'),
+		array(7*60*60*24,'week'),
+		array(52*60*60*24*7,'year'),
+	);
+
+	$diff = $now - $pre;
+
+	if ($suffix)
+	{
+		$ago = ($diff >= 0)?' ago':' from now';
+	}
+	else
+	{
+		$ago = '';
+	}
+
+	$diff = abs($diff);
+	$text = '';
+
+	for ($i=count($times)-1; $i>=0; --$i)
+	{
+		$x = floor($diff/$times[$i][0]);
+		$diff -= $x*$times[$i][0];
+		if ($x > 0)
+		{
+			$text .= "$x ".$times[$i][1].(($x == 1)?'':'s').', ';
+		}
+	}
+
+	if ($text == '')
+	{
+		$text = '0 seconds, ';
+	}
+
+	return substr($text,0,-2).$ago;
+}
+
 function webcp_error_handler($errno, $errstr, $errfile, $errline)
 {
 	global $tpl;

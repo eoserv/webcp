@@ -73,4 +73,4 @@ if (!empty($_POST['currentpassword']) && !empty($_POST['newpassword']) && !empty
 	}
 }
 
-$tpl->Execute('editacc');
+$tpl->Execute('details');
