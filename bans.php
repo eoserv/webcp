@@ -47,6 +47,12 @@ if (isset($_POST['action']))
 			{
 				$col = 'ip';
 				$val = ip2long($db->Escape($_POST['input']));
+				if (!$val)
+				{
+					$tpl->error = 'Malformed IP address.';
+					$tpl->Execute('error');
+					exit;
+				}
 			}
 			elseif (isset($_POST['input'], $_POST['unban-hdid']))
 			{
@@ -60,7 +66,6 @@ if (isset($_POST['action']))
 				{
 					$val = hexdec($hdid[0]);
 				}
-				echo $val;
 			}
 			else
 			{
