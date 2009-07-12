@@ -50,9 +50,6 @@ if (!empty($_POST['currentpassword']) && !empty($_POST['newpassword']) && !empty
 	else
 	{
 		$currentpassword = hash('sha256',$salt.($sess->username).substr($_POST['currentpassword'],0,12));
-		echo $userdata['password'];
-		echo "<br>";
-		echo $currentpassword;
 		if ($currentpassword != $userdata['password'])
 		{
 			$tpl->message = $tpl->message . "Current password did not match the one in the database.";
