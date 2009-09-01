@@ -3,6 +3,8 @@
 
 Current version: 1.4
 
+Updated 1 September 2009 (tehsausage@gmail.com) [1.5]
+	$ and # escaped when using MySQL too
 Updated 21 March 2009 (tehsausage@gmail.com) [1.4]
 	Strip null characters in Database::Escape()
 Updated 24th August 2008 (tehsausage@gmail.com) [1.3]
@@ -60,7 +62,7 @@ class Database{
 				return str_replace(array("'",'$','#',chr(0)),array("''",'$$','##',''),$str);
 				break;
 			case 'mysql':
-				return str_replace(chr(0),'',mysql_real_escape_string($str,$this->db));
+				return str_replace(array('$','#',chr(0)),array('$$','##',''),mysql_real_escape_string($str,$this->db));
 				break;
 		}
 		
