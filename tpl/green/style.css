@@ -130,6 +130,7 @@ a:hover
 	padding:2px;
 	min-height:260px;
 	_height:260px;
+	position:relative;
 }
 
 .aside
@@ -391,6 +392,7 @@ hr
 
 .showing
 {
+	width:80%;
 	display:block;
 	text-align:center;
 	margin:2ex 0;
@@ -398,7 +400,9 @@ hr
 
 .jumppage
 {
-	float:left;
+	position:absolute;
+	top:2px;
+	left:2px;
 	font-size:120%;
 }
 
@@ -410,7 +414,7 @@ hr
 
 .pagination
 {
-	clear:both;
+	width:80%;
 	display:block;
 	text-align:center;
 	font-size:110%;
@@ -431,4 +435,9 @@ table#character tbody th
 table#account tbody th
 {
 	width:25%;
+}
+
+table#guild tbody th
+{
+	width:20%;
 }

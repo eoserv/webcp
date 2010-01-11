@@ -7,22 +7,22 @@
 <table id="account">
 	<thead>
 		<tr>
-			<th colspan="2"><[account.username]>
+			<th colspan="2"><[~account.username]>
 
 	<tbody>
 		<tr><th>Computer Name<td><[~account.computer]>
 
 		<tr><th>HDID<td><[account.hdid_str]>
 
-		<tr><th>Registered<td><[account.created_str]>
+		<tr><th>Registered<td><[account.created_str]> (<[account.regip]>)
 
-		<tr><th>Last Used<td><[account.lastused_str]>
+		<tr><th>Last Used<td><[if account.lastused]><[account.lastused_str]> (<[account.lastip]>)<[else]><i>Never</i><[endif]>
 
-		<tr><th>Full Name<td><[account.fullname]>
+		<tr><th>Full Name<td><[~account.fullname]>
 
-		<tr><th>Location<td><[account.location]>
+		<tr><th>Location<td><[~account.location]>
 
-		<tr><th>E-Mail<td><[account.email]>
+		<tr><th>E-Mail<td><[~account.email]>
 
 </table>
 
@@ -40,7 +40,7 @@
 	<tbody>
 <[foreach characters char]>
 		<tr>
-			<td><a href="./gmcharacter<[php]>?name=<[char.name]>"><[char.name]></a><[if char.gm]> <img src="./tpl/green/images/admin.gif"><[endif]>
+			<td><a href="./character<[php]>?name=<[~char.name]>"><[~char.name]></a><[if char.gm]> <img src="./tpl/green/images/admin.gif"><[endif]>
 
 			<td><[~char.title]>
 

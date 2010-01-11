@@ -131,8 +131,8 @@ define('RACE_WHITE', 0);
 define('RACE_YELLOW', 1);
 define('RACE_TAN', 2);
 define('RACE_ORC', 3);
-define('RACE_PANDA', 4);
-define('RACE_SKELETON', 5);
+define('RACE_SKELETON', 4);
+define('RACE_PANDA', 5);
 define('RACE_FISH', 6);
 
 require 'config.php';
@@ -385,7 +385,7 @@ if (isset($userdata[0]))
 					'leader' => false
 				);
 			}
-			if ($cd['guild_rank'] == 1)
+			if ($cd['guild_rank'] <= 1)
 			{
 				$chardata_guilds[$cd['guild']]['leader'] = true;
 			}
@@ -619,5 +619,6 @@ global $eoserv_classes;
 
 function guildrank_str($ranks, $rank)
 {
+	if ($rank == 0) $rank = 1;
 	return isset($ranks[$rank-1])?$ranks[$rank-1]:'Unknown';
 }

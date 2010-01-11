@@ -37,7 +37,7 @@ if (!$guildlistq)
 }
 
 $members = $db->SQL("SELECT guild FROM characters WHERE $guildlistq");
-$totalexp = $db->SQL("SELECT guild,exp FROM characters WHERE $guildlistq AND admin = 0");
+$totalexp = $db->SQL("SELECT guild,exp FROM characters WHERE ($guildlistq) AND admin = 0");
 
 foreach ($guilds as &$guild)
 {
@@ -60,7 +60,7 @@ foreach ($guilds as &$guild)
 	}
 
 	$guild['exp'] = $expcount;
-	$guild['members'] = $members;
+	$guild['members'] = $membercount;
 }
 unset($guild);
 

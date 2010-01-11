@@ -21,9 +21,9 @@
 <[foreach characters char]>
 	<tbody>
 		<tr>
-			<td><a href="./gmcharacter<[php]>?name=<[char.name]>"><[char.name]></a><[if char.gm]> <img src="./tpl/green/images/admin.gif"><[endif]>
+			<td><a href="./character<[php]>?name=<[~char.name]>"><[~char.name]></a><[if char.gm]> <img src="./tpl/green/images/admin.gif"><[endif]>
 
-			<td><a href="./gmaccount<[php]>?name=<[char.account]>"><[char.account]></a>
+			<td><a href="./gmaccount<[php]>?name=<[~char.account]>"><[~char.account]></a>
 
 			<td><[char.level]>
 

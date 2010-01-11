@@ -211,6 +211,8 @@ if (!empty($_GET['searchtype']))
 				{
 					$membercount = $db->SQL("SELECT COUNT(1) as count FROM characters WHERE guild = '$'", $guild['tag']);
 					$totalexp = $db->SQL("SELECT SUM(exp) as totalexp FROM characters WHERE guild = '$' AND admin = 0", $guild['tag']);
+					$guild['tag'] = trim(strtoupper($guild['tag']));
+					$guild['name'] = ucfirst($guild['name']);
 					$guild['members'] = number_format($membercount[0]['count']);
 					$guild['exp'] = number_format($totalexp[0]['totalexp']);
 				}
