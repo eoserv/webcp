@@ -19,11 +19,18 @@ if (empty($_GET['name']))
 	exit;
 }
 
-$character = $db->SQL("SELECT * FROM characters WHERE name = '$' AND account = '$' LIMIT 1", strtolower($_GET['name']), $sess->username);
+if ($GM)
+{
+	$character = $db->SQL("SELECT * FROM characters WHERE name = '$' LIMIT 1", strtolower($_GET['name']));
+}
+else
+{
+	$character = $db->SQL("SELECT * FROM characters WHERE name = '$' AND account = '$' LIMIT 1", strtolower($_GET['name']), $sess->username);
+}
 
 if (empty($character))
 {
-	$tpl->message = 'Character does not exist or is not yours.';
+	$tpl->message = 'Character does not exist' . ($GM ? '.' : ' or is not yours.');
 	$tpl->Execute(null);
 	exit;
 }
@@ -45,7 +52,7 @@ if (!empty($character['guild']))
 	$guildinfo = $db->SQL("SELECT * FROM guilds WHERE tag = '$'", $character['guild']);
 	if (!empty($guildinfo[0]))
 	{
-		$character['guild_name'] = $guildinfo[0]['name'];
+		$character['guild_name'] = ucfirst($guildinfo[0]['name']);
 		$character['guild_rank_str'] = guildrank_str(unserialize_guildranks($guildinfo[0]['ranks']), $character['guild_rank']);
 	}
 }
@@ -56,7 +63,7 @@ $character['partner'] = empty($character['partner'])?'-':ucfirst($character['par
 $character['exp'] = number_format($character['exp']);
 $character['admin_str'] = adminrank_str($character['admin']);
 
-$pagetitle .= ': '.$character['name'];
+$pagetitle .= ': '.htmlentities($character['name']);
 $tpl->pagetitle = $pagetitle;
 
 $tpl->character = $character;

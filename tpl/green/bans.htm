@@ -18,15 +18,15 @@
 	<tbody>
 <[foreach bans ban]>
 		<tr>
-			<td><[if !ban.nouser]><a href="./gmaccount<[php]>?name=<[ban.username]>"><[endif]><[ban.username]><[if !ban.nouser]></a><[endif]>
+			<td><[if !ban.nouser]><a href="./gmaccount<[php]>?name=<[~ban.username]>"><[endif]><[~ban.username]><[if !ban.nouser]></a><[endif]>
 
-			<td><[ban.ip_str]>
+			<td><[~ban.ip_str]>
 
 			<td><[~ban.hdid_str]>
 
 			<td><[ban.remaining]>
 
-			<td><a href="./gmcharacter<[php]>?name=<[ban.setter]>"><[ban.setter]></a>
+			<td><a href="./character<[php]>?name=<[~ban.setter]>"><[~ban.setter]></a>
 
 <[endforeach]>
 </table>

@@ -1,0 +1,44 @@
+<[if can_edit]>
+<ul class="gmoptions">
+	<li><a href="./editguild<[php]>?tag=<[~guild.tag]>">Edit Guild</a>
+</ul>
+<[endif]>
+
+<table id="guild">
+	<thead>
+		<tr>
+			<th colspan="3"><[~guild.tag]>
+
+	<tbody>
+		<tr><th>Guild Name<td colspan="2"><[~guild.name]>
+
+		<tr><th>Created<td colspan="2"><[guild.created_str]>
+
+		<tr><th>Description<td colspan="2"><[~guild.description]>
+
+		<tr><th>Bank<td colspan="2"><[guild.bank]>
+
+		<tr><th>Exp<td colspan="2"><[guild.exp]>
+
+		<tr><th>Members<td colspan="2"><a href="./guildmembers<[php]>?tag=<[~guild.tag]>"><[guild.members]></a>
+		<tr><th rowspan="9">Ranks
+<[foreach guild.ranks rank id]>
+		<[if id]><tr><[endif]><th><[rank.0]><td><[~rank.1]>
+
+<[endforeach]>
+<[if num_leaders]>
+		<tr><th rowspan="<[num_leaders]>">Leaders
+<[foreach leaders leader id]>
+		<[if id]><tr><[endif]><td colspan="2"><[if GM]><a href="./character<[php]>?name=<[~leader.name]>"><[endif]><[~leader.name]><[if GM]></a><[endif]><[if leader.gm]> <img src="./tpl/green/images/admin.gif"><[endif]><[if !leader.guild_rank]> (founder)<[endif]>
+
+<[endforeach]>
+<[endif]>
+<[if num_recruiters]>
+		<tr><th rowspan="<[num_recruiters]>">Recruiters
+<[foreach recruiters recruiter id]>
+		<[if id]><tr><[endif]><td colspan="2"><[if GM]><a href="./character<[php]>?name=<[~recruiter.name]>"><[endif]><[~recruiter.name]><[if GM]></a><[endif]><[if recruiter.gm]> <img src="./tpl/green/images/admin.gif"><[endif]>
+
+<[endforeach]>
+<[endif]>
+
+</table>

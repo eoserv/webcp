@@ -1,5 +1,6 @@
 <div class="jumppage">
 <form action="" method="GET">
+<input type="hidden" name="tag" value="<[~_GET.tag]>">
 <label for="page">Page:</label> <input type="text" name="page" id="page" value="<[page]>" size="3">/<[pages]> <input type="submit" value="Go">
 </form>
 </div>
@@ -11,22 +12,19 @@
 	<thead>
 		<tr>
 			<th>Name
-			<th>Account
 			<th>Level
 			<th>Exp
 			<th>Rank
 	<tbody>
-<[foreach characters char]>
+<[foreach members char]>
 		<tr>
-			<td><a href="./character<[php]>?name=<[~char.name]>"><[~char.name]></a><[if char.gm]> <img src="./tpl/green/images/admin.gif"><[endif]>
-
-			<td><a href="./gmaccount<[php]>?name=<[~char.account]>"><[~char.account]></a>
+			<td><[if GM]><a href="./character<[php]>?name=<[~char.name]>"><[endif]><[~char.name]><[if GM]></a><[endif]><[if char.gm]> <img src="./tpl/green/images/admin.gif"><[endif]>
 
 			<td><[char.level]>
 
 			<td><[char.exp]>
 
-			<td><[char.admin_str]>
+			<td><[char.rank]>
 
 <[endforeach]>
 </table>

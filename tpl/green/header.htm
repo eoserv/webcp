@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="./tpl/green/style.css">
 
 <div id="header">
-<h1><a href="<[homeurl]>"><[sitename]></a></h1>
+<h1><a href="<[homeurl]>"><[~sitename]></a></h1>
 <span id="subtitle">
 EOSERV Control Panel
 </span>
@@ -20,24 +20,22 @@ EOSERV Control Panel
 
 <[if logged]>
 <ul class="nav playernav">
-	<li><span><[username]></span>
+	<li><span><[~username]></span>
 	<li><a href="./characters<[php]>">My&nbsp;Characters&nbsp;(<[numchars]>)</a>
 	<li><a href="./details<[php]>">Edit&nbsp;Details</a>
 	<li><a href="./logout<[php]>?csrf=<[csrf]>">Logout</a>
 </ul>
 <[endif]>
 
-<!--
 <[foreach chardata_guilds guild tag]>
 <ul class="nav guildnav">
-	<li><span>Guild: <a href="./guild<[php]>?tag=<[tag]>"><[tag]></a></span>
-	<[if guild.leader]><li><a href="./editguild<[php]>?tag=<[tag]>">Edit&nbsp;Guild</a><[endif]>
+	<li><span>Guild: <a href="./guild<[php]>?tag=<[~tag]>"><[~tag]></a></span>
+	<[if guild.leader]><li><a href="./editguild<[php]>?tag=<[~tag]>">Edit&nbsp;Guild</a><[endif]>
 
-	<li><a href="./guildmembers<[php]>?tag=<[tag]>">Member&nbsp;List</a>
-	<li><a href="./guildsearch<[php]>?tag=<[tag]>">Member&nbsp;Search</a>
+	<li><a href="./guildmembers<[php]>?tag=<[~tag]>">Member&nbsp;List</a>
+	<li><a href="./guildsearch<[php]>?tag=<[~tag]>">Member&nbsp;Search</a>
 </ul>
 <[endforeach]>
--->
 
 <[if GUARDIAN]>
 <ul class="nav guardiannav">

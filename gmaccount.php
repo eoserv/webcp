@@ -60,4 +60,4 @@ $tpl->characters = $characters;
 $pagetitle .= ': '.htmlentities($_GET['name']);
 $tpl->pagetitle = $pagetitle;
 
-$tpl->Execute('gmaccount');
+$tpl->Execute('account');

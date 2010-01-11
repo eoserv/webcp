@@ -1,7 +1,7 @@
 <?php
 /* This script is free to modify and distribute
 
-Current version: 1.4
+Current version: 1.5
 
 Updated 1 September 2009 (tehsausage@gmail.com) [1.5]
 	$ and # escaped when using MySQL too
