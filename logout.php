@@ -8,6 +8,7 @@ require 'common.php';
 $tpl->loggingout = true;
 $tpl->message = 'Logged out.';
 $tpl->logged = $logged = false;
+$tpl->GUIDE = $GUIDE = false;
 $tpl->GUARDIAN = $GUARDIAN = false;
 $tpl->GM = $GM = false;
 $tpl->HGM = $HGM = false;

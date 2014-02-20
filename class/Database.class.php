@@ -151,8 +151,11 @@ class Database{
 				$ret = array();
 				$result = mysql_query($finalquery,$this->db);
 				if ($result){
-					while (($a = @mysql_fetch_assoc($result)) !== false)
-						$ret[] = $a;
+					if (!is_bool($result))
+					{
+						while (($a = mysql_fetch_assoc($result)))
+							$ret[] = $a;
+					}
 				} else
 					throw new Exception("Query failed. (".mysql_error($this->db).")");
 				$end_query = microtime(true);
