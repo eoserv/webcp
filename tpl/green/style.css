@@ -406,6 +406,24 @@ hr
 	*width:94%;
 }
 
+table.chat_log
+{
+	margin:0;
+	font-family:MS Sans Serif;
+	font-size:9px;
+}
+
+table.chat_log td:nth-child(2)
+{
+	width:25%;
+	text-align:right;
+}
+
+table.chat_log td:nth-child(3)
+{
+	width:100%;
+}
+
 .showing
 {
 	width:80%;
