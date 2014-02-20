@@ -1,0 +1,35 @@
+<div class="jumppage">
+<form action="" method="GET">
+<label for="page">Page:</label> <input type="text" name="page" id="page" value="<[page]>" size="3">/<[pages]> <input type="submit" value="Go">
+</form>
+</div>
+
+<span class="showing">Showing <[showing]> (<[start]> - <[end]>) of <[count]> reports.</span>
+<[pagination]>
+
+<table id="reports">
+	<thead>
+		<tr>
+			<th>Reporter
+			<th>Reported
+			<th>Reason
+			<th>Chat Log
+			<th>Time
+	<tbody>
+<[foreach reports report]>
+		<tr>
+			<td><a href="./character<[php]>?name=<[~report.reporter]>"><[~report.reporter]></a>
+
+			<td><a href="./character<[php]>?name=<[~report.reported]>"><[~report.reported]></a>
+
+			<td><[~report.reason]>
+
+			<td><a href="./report_log<[php]>?reporter=<[~report.reporter]>&reported=<[~report.reported]>&time=<[report.time]>">(view log)</a>
+
+			<td><[report.time_ago]>
+
+<[endforeach]>
+</table>
+
+<[pagination]>
+<span class="showing">Showing <[showing]> (<[start]> - <[end]>) of <[count]> reports.</span>
