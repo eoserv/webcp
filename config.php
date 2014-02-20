@@ -44,10 +44,10 @@ $topguilds = 100;
 // How many seconds to keep the online list/status cached, reducing this will increase the accuracy of the online list/status, but increase server load
 $onlinecache = 60;
 
-// Where the EIF and ECF files are found, no trailing slash
+// Where the pub files are found, no trailing slash
 $pubfiles = './pub';
 
-// Caches EIF and ECF file data to a native PHP format, disabling this will use a lot more CPU power than neccessary
+// Caches pub file data to a native PHP format, disabling this will use a lot more CPU power than neccessary
 $pubcache = true;
 
 // Turning this on will cause HTTP 400 errors if you refresh a form, but provides a little more security
