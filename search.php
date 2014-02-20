@@ -32,7 +32,9 @@ if (!empty($_GET['searchtype']))
 				$hdid = explode('-', $_GET['hdid']);
 				if (isset($hdid[1]))
 				{
-					$hdid = hexdec($hdid[0]) * 0x10000 + hexdec($hdid[1]);
+					$hdid = intval(hexdec($hdid[0]) * 0x10000 + hexdec($hdid[1]));
+					if ($hdid > 0x7FFFFFFF)
+						$hdid = -0x100000000 + $hdid;
 					$hdidq = " AND hdid = '".$hdid."'";
 				}
 				else
