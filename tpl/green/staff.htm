@@ -8,7 +8,7 @@
 	<tbody>
 <[foreach characters char]>
 		<tr>
-			<td><[~char.name]>
+			<td><[if GM]><a href="./character<[php]>?name=<[~char.name]>"><[endif]><[~char.name]><[if GM]></a><[endif]>
 
 			<td><[~char.title]>
 
