@@ -183,6 +183,16 @@ if (!is_file($pubfiles.'/dat001.ecf'))
 	exit("File not found: $pubfiles/dat001.ecf");
 }
 
+if (!is_file($pubfiles.'/dsl001.esf'))
+{
+	exit("File not found: $pubfiles/dsl001.esf");
+}
+
+if (!is_file($pubfiles.'/dtn001.enf'))
+{
+	exit("File not found: $pubfiles/dtn001.enf");
+}
+
 if (!empty($NEEDPUB))
 {
 	require 'class/EIFReader.class.php';
@@ -212,6 +222,36 @@ if (!empty($NEEDPUB))
 		if ($pubcache)
 		{
 			file_put_contents('ecf.cache', serialize($eoserv_classes));
+		}
+	}
+
+	require 'class/ESFReader.class.php';
+
+	if ($pubcache && file_exists('esf.cache') && filemtime('esf.cache') < filemtime($pubfiles.'/dsl001.esf'))
+	{
+		$eoserv_spells = unserialize(file_get_contents('esf.cache'));
+	}
+	else
+	{
+		$eoserv_spells = new ESFReader("$pubfiles/dsl001.esf");
+		if ($pubcache)
+		{
+			file_put_contents('esf.cache', serialize($eoserv_spells));
+		}
+	}
+
+	require 'class/ENFReader.class.php';
+
+	if ($pubcache && file_exists('enf.cache') && filemtime('enf.cache') >= filemtime($pubfiles.'/dtn001.enf'))
+	{
+		$eoserv_npcs = unserialize(file_get_contents('enf.cache'));
+	}
+	else
+	{
+		$eoserv_npcs = new ENFReader("$pubfiles/dtn001.enf");
+		if ($pubcache)
+		{
+			file_put_contents('enf.cache', serialize($eoserv_npcs));
 		}
 	}
 }
@@ -577,7 +617,6 @@ global $eoserv_items;
 
 function unserialize_guildranks($str)
 {
-global $eoserv_items;
 	$ranks = explode(',', $str);
 	array_pop($ranks);
 	
@@ -589,9 +628,24 @@ global $eoserv_items;
 	return $ranks;
 }
 
-function unserialize_spells()
+function unserialize_spells($str)
 {
-	return array();
+global $eoserv_spells;
+	$spells = explode(';', $str);
+	array_pop($spells);
+
+	foreach ($spells as &$spell)
+	{
+		$xspell = explode(',', $spell);
+		$spell = array(
+			'id' => (int)$xspell[0],
+			'name' => $eoserv_spells->Get($xspell[0])->name,
+			'level' => $xspell[1]
+		);
+	}
+	unset($spell);
+	
+	return $spells;
 }
 
 function karma_str($karma)
