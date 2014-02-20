@@ -314,6 +314,58 @@ else
 
 $tpl->statusstr = $statusstr;
 
+function seose_to_base62($input)
+{
+	static $dict = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	
+	$result = "";
+	
+	while ($input > 0)
+	{
+		$result = $dict[$input % 62] . $result;
+		$input = intval($input / 62);
+	}
+	
+	return $result;
+}
+
+function seose_hash($input, $method)
+{
+	$result = 0;
+	
+	for ($i = 0; $i < strlen($input); ++$i)
+	{
+		for ($j = 7; $j >= 0; --$j)
+		{
+			$pow = 1 << $j;
+			$test_bit = (($result & 0x8000) == 0x8000) ^ ((ord($input[$i]) & $pow) == $pow);
+			$result = (($result & 0x7FFF) * 2) & 0xFFFF;
+			
+			if ($test_bit)
+				$result = $result ^ $method;
+		}
+	}
+	
+	return $result;
+}
+
+function seose_str_hash($input, $key)
+{
+	$result = "";
+
+	for ($i = 0; $i < strlen($key); ++$i)
+	{
+		$kc = ord($key[$i]);
+		
+		if ($kc == ord('#'))
+			$kc = 0xA3;
+		
+		$result .= seose_to_base62(seose_hash($input, (($i + 1) * $kc) & 0xFFFF));
+	}
+	
+	return $result;
+}
+
 if (isset($_REQUEST['action']))
 {
 	switch ($_REQUEST['action'])
@@ -324,7 +376,12 @@ if (isset($_REQUEST['action']))
 		case 'login':
 			if (isset($_POST['username'], $_POST['password']))
 			{
-				$password = hash('sha256',$salt.strtolower($_POST['username']).substr($_POST['password'],0,12));
+				$password = substr($_POST['password'], 0, 12);
+
+				if ($seose_compat)
+					$password = seose_str_hash($password, $seose_compat_key);
+
+				$password = hash('sha256',$salt.strtolower($_POST['username']).$password);
 				$checklogin = $db->SQL("SELECT username FROM accounts WHERE username = '$' AND password = '$'", strtolower($_POST['username']), $password);
 				if (empty($checklogin))
 				{
@@ -351,6 +408,7 @@ if ($logged && empty($userdata))
 	$tpl->logged = $logged = false;
 }
 
+$tpl->GUIDE = $GUIDE = false;
 $tpl->GUARDIAN = $GUARDIAN = false;
 $tpl->GM = $GM = false;
 $tpl->HGM = $HGM = false;
@@ -362,6 +420,11 @@ if (isset($userdata[0]))
 	$chardata = $db->SQL("SELECT * FROM characters WHERE account = '$'", $sess->username);
 	foreach ($chardata as $cd)
 	{
+		if ($cd['admin'] >= ADMIN_GUIDE)
+		{
+			$tpl->GUIDE = $GUIDE = true;
+		}
+
 		if ($cd['admin'] >= ADMIN_GUARDIAN)
 		{
 			$tpl->GUARDIAN = $GUARDIAN = true;

@@ -9,6 +9,8 @@ $sitename = 'My Server Name';
 
 // Password salt, this must be the same as in EOSERV's config.ini
 $salt = 'ChangeMe';
+$seose_compat = false;
+$seose_compat_key = 'D4q9_f30da%#q02#)8';
 
 // Database connection info
 $dbtype = 'mysql';

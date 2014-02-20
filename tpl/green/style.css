@@ -324,36 +324,52 @@ hr
 	background-color:#AA9966 !important;
 }
 
-.guardiannav
+.guidenav
 {
 	background-color:#DD9966 !important;
 }
 
-.guardiannav li a
+.guidenav li a
 {
 	color:#330000 !important;
 }
 
-.guardiannav li a:hover
+.guidenav li a:hover
 {
 	color:#443300 !important;
 	background-color:#BB8855 !important;
 }
 
-.gmnav
+.guardiannav
 {
 	background-color:#EE8855 !important;
 }
 
-.gmnav li a
+.guardiannav li a
 {
 	color:#550000 !important;
 }
 
-.gmnav li a:hover
+.guardiannav li a:hover
 {
 	color:#552200 !important;
 	background-color:#CC7744 !important;
+}
+
+.gmnav
+{
+	background-color:#FF7744 !important;
+}
+
+.gmnav li a
+{
+	color:#660000 !important;
+}
+
+.gmnav li a:hover
+{
+	color:#661100 !important;
+	background-color:#DD6633 !important;
 }
 
 .hgmnav

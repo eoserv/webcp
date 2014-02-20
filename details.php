@@ -49,14 +49,24 @@ if (!empty($_POST['currentpassword']) && !empty($_POST['newpassword']) && !empty
 	}
 	else
 	{
-		$currentpassword = hash('sha256',$salt.($sess->username).substr($_POST['currentpassword'],0,12));
+		$currentpassword = substr($_POST['currentpassword'], 0, 12);
+		
+		if ($seose_compat)
+			$currentpassword = seose_str_hash($currentpassword, $seose_compat_key);
+
+		$currentpassword = hash('sha256',$salt.($sess->username).$currentpassword);
 		if ($currentpassword != $userdata['password'])
 		{
 			$tpl->message = $tpl->message . "Current password did not match the one in the database.";
 		}
 		else
 		{
-			$newpassword = hash('sha256',$salt.($sess->username).substr($_POST['newpassword'],0,12));
+			$newpassword = substr($_POST['newpassword'], 0, 12);
+		
+			if ($seose_compat)
+				$newpassword = seose_str_hash($newpassword, $seose_compat_key);
+			
+			$newpassword = hash('sha256',$salt.($sess->username).$newpassword);
 			$db->SQL("UPDATE accounts SET password = '$' WHERE username = '$'", $newpassword, $sess->username);
 			if ($db->AffectedRows() != 1)
 			{
