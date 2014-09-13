@@ -20,9 +20,9 @@
 		<tr>
 			<td><[if !ban.nouser]><a href="./gmaccount<[php]>?name=<[~ban.username]>"><[endif]><[~ban.username]><[if !ban.nouser]></a><[endif]>
 
-			<td><[~ban.ip_str]>
+			<td><[if !ban.noip]><a href="search<[php]>?searchtype=account&ip=<[ban.ip_str]>&csrf=<[csrf]>"><[endif]><[~ban.ip_str]><[if !ban.noip]></a><[endif]>
 
-			<td><[~ban.hdid_str]>
+			<td><[if !ban.nohdid]><a href="search<[php]>?searchtype=account&hdid=<[ban.hdid_str]>&csrf=<[csrf]>"><[endif]><[~ban.hdid_str]><[if !ban.nohdid]></a><[endif]>
 
 			<td><[#ban.remaining]>
 

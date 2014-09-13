@@ -2,7 +2,7 @@
 
 $pagetitle = 'Search';
 
-if (!empty($_GET['searchtype']))
+if (isset($_GET['searchtype']) && count($_GET) > 1)
 {
 	$checkcsrf = true;
 }
@@ -27,7 +27,12 @@ if (!empty($_GET['searchtype']))
 	switch ($_GET['searchtype'])
 	{
 		case 'account':
-			if (isset($_GET['username'],$_GET['computer'],$_GET['hdid']))
+			if (!isset($_GET['username'])) $_GET['username'] = '%';
+			if (!isset($_GET['computer'])) $_GET['computer'] = '%';
+			if (!isset($_GET['hdid']))     $_GET['hdid'] = '';
+			if (!isset($_GET['ip']))       $_GET['ip'] = '';
+
+			if (isset($_GET['username'],$_GET['computer'],$_GET['hdid'],$_GET['ip']))
 			{
 				$hdid = explode('-', $_GET['hdid']);
 				if (isset($hdid[1]))
@@ -42,10 +47,21 @@ if (!empty($_GET['searchtype']))
 					$hdidq = "";
 				}
 
+				$ip = intval(ip2long($_GET['ip']));
+
+				if ($ip != 0)
+				{
+					$ipq = " AND (regip = '".long2ip($ip)."' OR lastip='".long2ip($ip)."')";
+				}
+				else
+				{
+					$ipq = "";
+				}
+
 				$username = strtolower($_GET['username']);
 				$computer = strtoupper($_GET['computer']);
 
-				$count = $db->SQL("SELECT COUNT(1) as count FROM accounts WHERE username LIKE '$' AND computer LIKE '$'$hdidq", $username, $computer);
+				$count = $db->SQL("SELECT COUNT(1) as count FROM accounts WHERE username LIKE '$' AND computer LIKE '$'$hdidq$ipq", $username, $computer);
 				$count = $count[0]['count'];
 
 				$page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -65,7 +81,7 @@ if (!empty($_GET['searchtype']))
 					return;
 				}
 				
-				$accounts = $db->SQL("SELECT * FROM accounts WHERE username LIKE '$' AND computer LIKE '$'$hdidq LIMIT #,#", $username, $computer, $start, $perpage);
+				$accounts = $db->SQL("SELECT * FROM accounts WHERE username LIKE '$' AND computer LIKE '$'$hdidq$ipq LIMIT #,#", $username, $computer, $start, $perpage);
 
 				$acclistq = '';
 
@@ -84,20 +100,28 @@ if (!empty($_GET['searchtype']))
 					trigger_error("No accounts were selected");
 				}
 
-				$charcounts = $db->SQL("SELECT account FROM characters WHERE $acclistq");
+				$charcounts = $db->SQL("SELECT name,admin,account FROM characters WHERE $acclistq");
 
 				foreach ($accounts as $i => &$account)
 				{
-					$charcount = 0;
-					foreach ($charcounts as $character)
-					{
-						if ($character['account'] == $account['username'])
-						{
-							++$charcount;
-						}
-					}
-					$account['characters'] = $charcount;
+				    $charcount = 0;
+				    $charlist = array();
+				    foreach ($charcounts as $character)
+				    {
+				        if ($character['account'] == $account['username'])
+				        {
+				            ++$charcount;
+				            $charlist[] = array(
+				                'name' => ucfirst($character['name']),
+				                'admin' => $character['admin'],
+				                'gm' => $character['admin'] > 0
+				            );
+				        }
+				    }
+				    $account['characters'] = $charcount;
+				    $account['character_list'] = $charlist;
 				}
+
 				unset($account);
 
 				$pagination = generate_pagination($pages, $page, '?searchtype=account&username='.urlencode($_GET['username']).'&computer='.urlencode($_GET['computer']).'&hdid='.urlencode($_GET['hdid']).'&csrf='.$csrf);
@@ -123,6 +147,8 @@ if (!empty($_GET['searchtype']))
 			break;
 		
 		case 'character':
+			if (!isset($_GET['name'])) $_GET['name'] = '%';
+
 			if (isset($_GET['name']))
 			{
 				$name = strtolower($_GET['name']);
@@ -182,6 +208,9 @@ if (!empty($_GET['searchtype']))
 			break;
 
 		case 'guild':
+			if (!isset($_GET['tag']))  $_GET['tag'] = '%';
+			if (!isset($_GET['name'])) $_GET['name'] = '%';
+
 			if (isset($_GET['tag'], $_GET['name']))
 			{
 				$tag = strtoupper($_GET['tag']);
