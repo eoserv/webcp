@@ -94,7 +94,9 @@ $bans = $db->SQL("SELECT * FROM bans ORDER BY expires DESC LIMIT #,#", $start, $
 foreach ($bans as &$ban)
 {
 	$ban['username'] = $ban['username']===null?'-':$ban['username'];
-	$ban['nouser'] = $ban['username']!==null;
+	$ban['nouser'] = $ban['username']===null;
+	$ban['noip'] = $ban['ip']===null;
+	$ban['nohdid'] = $ban['hdid']===null;
 	$ban['ip_str'] = $ban['ip']===null?'-':long2ip($ban['ip']);
 	$ban['setter'] = ucfirst($ban['setter']);
 	$ban['hdid_str'] = sprintf("%08x", (double)$ban['hdid']);

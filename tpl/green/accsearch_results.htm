@@ -24,10 +24,16 @@
 		<tr>
 			<td><a href="./gmaccount<[php]>?name=<[~acc.username]>"><[~acc.username]></a>
 			<td><[acc.characters]>
+<[if acc.characters]> (<[endif]>
+<[foreach acc.character_list char]>
+    <a href="./character<[php]>?name=<[char.name]>"><[char.name]></a><[if char.gm]> <img src="./tpl/green/images/admin.gif"><[endif]>
+<[endforeach]>
+<[if acc.characters]> )<[endif]>
 
-			<td><[~acc.computer]>
 
-			<td><[acc.hdid_str]>
+			<td><a href="search<[php]>?searchtype=account&computer=<[~acc.computer]>&csrf=<[csrf]>"><[~acc.computer]></a>
+
+			<td><a href="search<[php]>?searchtype=account&hdid=<[acc.hdid_str]>&csrf=<[csrf]>"><[acc.hdid_str]></a>
 
 <[endforeach]>
 </table>
