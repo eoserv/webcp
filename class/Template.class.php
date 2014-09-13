@@ -1,11 +1,16 @@
 <?php
 /* This script is free to modify and distribute
 
-Current version: 1.3
+Current version: 1.5
 
+Updated 13th September 2014 (tehsausage@gmail.com) [1.5]
+	Default printing behaviour is to escape HTML entities.
+	<[~foo]> behaves identially to <[foo]> for backwards compatability.
+	<[#foo]> will paste the raw html content of foo.
+Updated 23rd April 2009 (tehsausage@gmail.com) [1.4]
+	Added elseif
 Updated 2nd April 2009 (tehsausage@gmail.com) [1.3]
 	Automatic header/footer inclusion
-	Global variable access
 Updated 5th December 2007 (tehsausage@gmail.com) [1.2]
 	Added support for htmlentities operator. <[~varname]>
 Updated 9th December 2007 (tehsausage@gmail.com) [1.1]
@@ -35,28 +40,29 @@ class Template{
 	const T_SPACE = ' ';
 	const T_NOT = '!';
 	const T_HTMLENTITIES = '~';
+	const T_NOESCAPE = '#';
 	const T_ISARRAY = '@';
 	const T_IF = 'if';
+	const T_ELSEIF = 'elseif';
 	const T_ELSE = 'else';
 	const T_ENDIF = 'endif';
 	const T_FOREACH = 'foreach';
 	const T_ENDFOREACH = 'endforeach';
 	protected $path = './tpl';
 	private $vars = array();
+	protected $compile_time;
 	private $included_header = false;
 	private $included_footer = false;
-	function __construct($path=null, $autohead = false){
+	function __construct($path=null, $autohead = true){
 		$this->included_header = $this->included_footer = !$autohead;
+		$this->compile_time = 0.0;
+		$this->exec_time = 0.0;
 		if ($path != null)
 			$this->path = $path;
 		if (!is_dir($this->path))
 			throw new Exception("Template directory does not exist");
 		if (!is_dir($this->path.'/compiled'))
 			mkdir($this->path.'/compiled');
-	}
-	function MainExecuted()
-	{
-		return $this->included_header;
 	}
 	static function Secure($data,$string=false){
 		if ($string) return addslashes($data);
@@ -66,12 +72,11 @@ class Template{
 			return $matches[0];
 	}
 	function Compiled($file){
-		if (file_exists($this->path.'/compiled/'.$file.'.php') && file_exists($this->path.'/'.$file.'.htm'))
+		$php_exists = file_exists($this->path.'/compiled/'.$file.'.php');
+		if ($php_exists && file_exists($this->path.'/'.$file.'.htm'))
 			return (filemtime($this->path.'/compiled/'.$file.'.php') >= filemtime($this->path.'/'.$file.'.htm'));
-		elseif (file_exists($this->path.'/compiled/'.$file.'.php'))
-			return true;
 		else
-			return false;
+			return $php_exists;
 	}
 	function Exists($file){
 		return file_exists($this->path.'/'.$file.'.htm');
@@ -104,6 +109,7 @@ class Template{
 				$this->included_footer = true;
 			}
 		}
+
 	}
 	function Run($file){
 		extract($this->vars,EXTR_SKIP);
@@ -134,7 +140,7 @@ class Template{
 		$inside = null;
 		$ndoffset = 0;
 		$inloop = 0;
-		$htmlentities = false;
+		$htmlentities = true;
 		while ($done == false){
 			switch ($state){
 				case 0:
@@ -164,8 +170,8 @@ class Template{
 							$escape = !$escape;
 						elseif ($i == Template::T_QUOTE && !$escape && $pt2 > 0 && !$command)
 							$quoted = !$quoted;
-						elseif ($i == Template::T_HTMLENTITIES)
-							$htmlentities = true;
+						elseif ($i == Template::T_NOESCAPE)
+							$htmlentities = false;
 						elseif ($i == Template::T_SPLIT)
 							$pt2++;
 						elseif ($i == Template::T_SPACE && !$quoted){
@@ -202,7 +208,31 @@ class Template{
 							else
 								$code = "<?php if({$not}isset(\${$finalv}) ".($not=='!'?'||':'&&')." $not\${$finalv}){ ?>";
 						}
-					} elseif ($newi[0] == Template::T_ESCAPETAG)
+					}
+					elseif ($newi[0] == Template::T_ELSEIF){
+						if ($newi[1][0] == Template::T_NOT) $not = '!'; else $not = '';
+						if ($newi[1][0] == Template::T_ISARRAY) $isarray = true; else $isarray = false;
+						if (strpos($newi[1],Template::T_ARRAY) === false)
+							if ($isarray)
+								$code = "<?php } elseif({$not}isset(\$".Template::Secure($newi[1]).") ".($not=='!'?'||':'&&')." {$not}is_array(\$".Template::Secure($newi[1]).")){ ?>";
+							else
+								$code = "<?php } elseif({$not}isset(\$".Template::Secure($newi[1]).") ".($not=='!'?'||':'&&')." $not\$".Template::Secure($newi[1])."){ ?>";
+						else {
+							$exa = explode(Template::T_ARRAY,$newi[1]);
+							$finalv = Template::Secure(array_shift($exa));
+							foreach ($exa as $key){
+								if ($key == 'each')
+									$finalv = 'each';
+								else
+									$finalv.="['".Template::Secure($key,true)."']";
+							}
+							if ($isarray)
+								$code = "<?php } elseif({$not}isset(\${$finalv}) ".($not=='!'?'||':'&&')." {$not}is_array(\${$finalv})){ ?>";
+							else
+								$code = "<?php } elseif({$not}isset(\${$finalv}) ".($not=='!'?'||':'&&')." $not\${$finalv}){ ?>";
+						}
+					}
+					elseif ($newi[0] == Template::T_ESCAPETAG)
 						$code = Template::T_TAG_OPEN;
 					elseif ($newi[0] == Template::T_ELSE)
 						$code = "<?php } else { ?>";
@@ -229,10 +259,10 @@ class Template{
 					} else {
 						if (strpos($newi[0],Template::T_ARRAY) === false){
 							if ($htmlentities)
-								$code = "<?php echo htmlentities(isset(\$".Template::Secure($newi[0]).")?\$".Template::Secure($newi[0]).":'".(isset($newi[1])?Template::Secure($newi[1],true):'')."') ?>";
+								$code = "<?php echo htmlspecialchars(isset(\$".Template::Secure($newi[0]).")?\$".Template::Secure($newi[0]).":'".(isset($newi[1])?Template::Secure($newi[1],true):'')."',ENT_QUOTES,'UTF-8') ?>";
 							else
 								$code = "<?php echo (isset(\$".Template::Secure($newi[0]).")?\$".Template::Secure($newi[0]).":'".(isset($newi[1])?Template::Secure($newi[1],true):'')."') ?>";
-							$htmlentities = false;
+							$htmlentities = true;
 						} else {
 							$exa = explode(Template::T_ARRAY,$newi[0]);
 							$finalv = Template::Secure(array_shift($exa));
@@ -243,10 +273,10 @@ class Template{
 									$finalv.="['".Template::Secure($key,true)."']";
 							}
 							if ($htmlentities)
-								$code = "<?php echo htmlentities(isset(\${$finalv})?\${$finalv}:'".(isset($newi[1])?Template::Secure($newi[1],true):'')."') ?>";
+								$code = "<?php echo htmlspecialchars(isset(\${$finalv})?\${$finalv}:'".(isset($newi[1])?Template::Secure($newi[1],true):'')."',ENT_QUOTES,'UTF-8') ?>";
 							else
 								$code = "<?php echo (isset(\${$finalv})?\${$finalv}:'".(isset($newi[1])?Template::Secure($newi[1],true):'')."') ?>";							
-							$htmlentities = false;
+							$htmlentities = true;
 						}
 					}
 					$code;
