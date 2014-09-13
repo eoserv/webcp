@@ -73,16 +73,16 @@ EOSERV Control Panel
 <div id="article">
 
 <[if message]>
-<span class="message"><[message]></span>
+<span class="message"><[#message]></span>
 
 <[endif]>
 <[if error]>
-<span class="error"><[error]></span>
+<span class="error"><[#error]></span>
 
 <[endif]>
 <div class="aside" id="status">
 <h3>Server Status</h3>
-<[statusstr]><br>
+<[#statusstr]><br>
 <[if online]>
 <small>Online: <a href="./online<[php]>"><b><[onlinecharacters]></b>/<b><[maxplayers]></b></a></small>
 <[endif]>
