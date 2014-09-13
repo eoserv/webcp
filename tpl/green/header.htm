@@ -30,10 +30,14 @@ EOSERV Control Panel
 <[foreach chardata_guilds guild tag]>
 <ul class="nav guildnav">
 	<li><span>Guild: <a href="./guild<[php]>?tag=<[~tag]>"><[~tag]></a></span>
+<!--
 	<[if guild.leader]><li><a href="./editguild<[php]>?tag=<[~tag]>">Edit&nbsp;Guild</a><[endif]>
+-->
 
 	<li><a href="./guildmembers<[php]>?tag=<[~tag]>">Member&nbsp;List</a>
+<!--
 	<li><a href="./guildsearch<[php]>?tag=<[~tag]>">Member&nbsp;Search</a>
+-->
 </ul>
 <[endforeach]>
 
