@@ -597,9 +597,9 @@ global $eoserv_items;
 	$items = explode(',', $str);
 	array_pop($items);
 	
-	if (count($items) != 15)
+	while (count($items) < 15)
 	{
-		$items = array_fill(0, 15, 0);
+		$items[] = 0;
 	}
 
 	foreach ($items as &$item)
@@ -620,9 +620,9 @@ function unserialize_guildranks($str)
 	$ranks = explode(',', $str);
 	array_pop($ranks);
 	
-	if (count($ranks) != 9)
+	while (count($ranks) < 9)
 	{
-		$ranks = array_fill(0, 9, 0);
+		$ranks[] = "?";
 	}
 
 	return $ranks;

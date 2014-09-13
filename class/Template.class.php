@@ -64,6 +64,10 @@ class Template{
 		if (!is_dir($this->path.'/compiled'))
 			mkdir($this->path.'/compiled');
 	}
+	function MainExecuted()
+	{
+		return $this->included_header;
+	}
 	static function Secure($data,$string=false){
 		if ($string) return addslashes($data);
 		if (!preg_match('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/',$data,$matches))
