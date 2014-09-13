@@ -21,6 +21,13 @@ if (!$GM)
 $count = $db->SQL('SELECT COUNT(1) as count FROM guilds');
 $count = $count[0]['count'];
 
+if ($count == 0)
+{
+	$tpl->message = "No guilds have been created yet.";
+	$tpl->Execute(null);
+    exit;
+}			
+
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $pages = ceil($count / $perpage);
 

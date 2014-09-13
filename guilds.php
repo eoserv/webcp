@@ -14,7 +14,7 @@ $guilds = $db->SQL("SELECT tag, name FROM guilds");
 
 if (empty($guilds))
 {
-	$tpl->messages = "No guilds have been created yet.";
+	$tpl->message = "No guilds have been created yet.";
 	$tpl->Execute(null);
 	exit;
 }
