@@ -51,7 +51,7 @@ foreach ($members as &$member)
 }
 unset($member);
 
-$pagination = generate_pagination($pages, $page);
+$pagination = generate_pagination($pages, $page, '?tag=' . $guild['tag']);
 
 $tpl->page = $page;
 $tpl->pages = $pages;
@@ -64,7 +64,7 @@ $tpl->count = $count;
 
 $tpl->members = $members;
 
-$pagetitle .= ': '.strtoupper(htmlentities($_GET['tag']));
+$pagetitle .= ': '.htmlentities($guild['tag']);
 $tpl->pagetitle = $pagetitle;
 
 $tpl->Execute('guildmembers');
