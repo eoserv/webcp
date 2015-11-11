@@ -38,7 +38,7 @@ if ($page < 1 || $page > $pages)
 
 $start = ($page-1) * $perpage;
 
-$members = $db->SQL("SELECT * FROM characters WHERE guild = '$' ORDER BY guild_rank ASC, name ASC", $guild['tag']);
+$members = $db->SQL("SELECT * FROM characters WHERE guild = '$' ORDER BY guild_rank ASC, name ASC LIMIT #,#", $guild['tag'], $start, $perpage);
 
 foreach ($members as &$member)
 {
