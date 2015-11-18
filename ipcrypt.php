@@ -194,7 +194,7 @@ function webcp_decrypt_computer($ip)
 			if ($plaintext === false || strlen($plaintext) == 0)
 				return 'COMPUTERBAD';
 
-			return $plaintext;
+			return rtrim($plaintext);
 		}
 	}
 	
