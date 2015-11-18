@@ -34,6 +34,10 @@ if (!empty($_GET['searchtype']))
 
 			if (isset($_GET['username'],$_GET['computer'],$_GET['hdid'],$_GET['ip']))
 			{
+				$original_ip = $_GET['ip'];
+				$original_computer = $_GET['computer'];
+				$original_hdid = $_GET['hdid'];
+
 				if ($_GET['computer'] != '%')
 					$_GET['computer'] = webcp_decrypt_computer($_GET['computer']);
 
@@ -68,7 +72,7 @@ if (!empty($_GET['searchtype']))
 				}
 
 				$username = strtolower($_GET['username']);
-				$computer = strtoupper(rtrim($_GET['computer']));
+				$computer = strtoupper($_GET['computer']);
 
 				$count = webcp_db_fetchall("SELECT COUNT(1) as count FROM accounts WHERE username LIKE ? AND computer LIKE ?$hdidq$ipq", $username, $computer);
 				$count = $count[0]['count'];
@@ -138,7 +142,7 @@ if (!empty($_GET['searchtype']))
 
 				unset($account);
 
-				$pagination = generate_pagination($pages, $page, '?searchtype=account&username='.urlencode($_GET['username']).'&computer='.urlencode($_GET['computer']).'&hdid='.urlencode($_GET['hdid']).'&csrf='.$csrf);
+				$pagination = generate_pagination($pages, $page, '?searchtype=account&username='.urlencode($_GET['username']).'&ip='.urlencode($original_ip).'&computer='.urlencode($original_computer).'&hdid='.urlencode($original_hdid).'&csrf='.$csrf);
 
 				$tpl->page = $page;
 				$tpl->pages = $pages;
@@ -150,6 +154,10 @@ if (!empty($_GET['searchtype']))
 				$tpl->count = $count;
 
 				$tpl->accounts = $accounts;
+
+				$tpl->original_ip = $original_ip;
+				$tpl->original_computer = $original_computer;
+				$tpl->original_hdid = $original_hdid;
 
 				$tpl->Execute('accsearch_results');
 			}
