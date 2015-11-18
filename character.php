@@ -2,7 +2,7 @@
 
 $pagetitle = 'Character';
 
-$NEEDPUB = true;
+$NEEDPUB = array('EIF' => true, 'ECF' => true, 'ESF' => true);
 require 'common.php';
 
 if (!$logged)
