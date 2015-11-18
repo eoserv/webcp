@@ -25,7 +25,7 @@ if (!isset($_GET['reporter'], $_GET['reported'], $_GET['time']))
 	exit;
 }
 
-$report = $db->SQL("SELECT * FROM reports WHERE reporter = '$' AND reported = '$' AND time = #", strtolower($_GET['reporter']), strtolower($_GET['reported']), $_GET['time']);
+$report = webcp_db_fetchall("SELECT * FROM reports WHERE reporter = ? AND reported = ? AND time = ?", strtolower($_GET['reporter']), strtolower($_GET['reported']), $_GET['time']);
 
 if (empty($report[0]))
 {

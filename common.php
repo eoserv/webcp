@@ -143,18 +143,82 @@ if (!empty($DEBUG))
 	register_shutdown_function('webcp_debug_info');
 }
 
-require 'class/Database.class.php';
 require 'class/Template.class.php';
 require 'class/Session.class.php';
 
 try
 {
-	$db = new Database($dbtype, $dbhost, $dbuser, $dbpass, $dbname);
+	switch ($dbtype)
+	{
+		case 'sqlite':
+			$dsn = "sqlite:" . $dbhost;
+			$db = new PDO($dsn);
+			break;
+	
+		case 'mysql':
+			$dsn = "mysql:host=" . $dbhost . ';charset=ISO-8859-1';
+
+			if (isset($dbport))
+				$dsn .= ";port=" . $dbport;
+
+			if (isset($dbname))
+				$dsn .= ";dbname=" . $dbname;
+
+			$db = new PDO($dsn, $dbuser, $dbpass);
+			break;
+
+		default:
+			throw new Exception("Unknown DB type");
+	}
+
+	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 }
 catch (Exception $e)
 {
 	exit("Database connection failed. (".$e->getMessage().")");
 }
+
+function webcp_db_execute_array($sql, $params = null)
+{
+	global $db;
+
+	$sql = $db->prepare($sql);
+	
+	if ($sql->execute($params))
+		return $sql->rowCount();
+	else
+		return false;
+}
+
+function webcp_db_fetchall_array($sql, $params = null)
+{
+	global $db;
+
+	$sql = $db->prepare($sql);
+	
+	if ($sql->execute($params))
+		return $sql->fetchAll(PDO::FETCH_ASSOC);
+	else
+		return array();
+}
+
+function webcp_db_execute($sql/*, $params...*/)
+{
+	$params = func_get_args();
+	array_shift($params);
+
+	return webcp_db_execute_array($sql, $params);
+}
+
+function webcp_db_fetchall($sql/*, $params...*/)
+{
+	$params = func_get_args();
+	array_shift($params);
+
+	return webcp_db_fetchall_array($sql, $params);
+}
+
+
 $tpl = new Template('tpl/'.$template, true);
 $sess = new Session($cpid.'_EOSERVCP');
 
@@ -422,7 +486,7 @@ if (isset($_REQUEST['action']))
 					$password = seose_str_hash($password, $seose_compat_key);
 
 				$password = hash('sha256',$salt.strtolower($_POST['username']).$password);
-				$checklogin = $db->SQL("SELECT username FROM accounts WHERE username = '$' AND password = '$'", strtolower($_POST['username']), $password);
+				$checklogin = webcp_db_fetchall("SELECT username FROM accounts WHERE username = ? AND password = '$'", strtolower($_POST['username']), $password);
 				if (empty($checklogin))
 				{
 					$tpl->message = "Login failed.";
@@ -440,7 +504,8 @@ if (isset($_REQUEST['action']))
 
 $tpl->logged = $logged = isset($sess->username);
 $tpl->username = $sess->username;
-$userdata = $db->SQL("SELECT * FROM accounts WHERE username = '$'", $sess->username);
+
+$userdata = webcp_db_fetchall("SELECT * FROM accounts WHERE username = ? LIMIT 1", $sess->username);
 
 if ($logged && empty($userdata))
 {
@@ -457,7 +522,7 @@ $chardata_guilds = array();
 if (isset($userdata[0]))
 {
 	$userdata = $userdata[0];
-	$chardata = $db->SQL("SELECT * FROM characters WHERE account = '$'", $sess->username);
+	$chardata = webcp_db_fetchall("SELECT * FROM characters WHERE account = ?", $sess->username);
 	foreach ($chardata as $cd)
 	{
 		if ($cd['admin'] >= ADMIN_GUIDE)

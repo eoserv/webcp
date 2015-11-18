@@ -18,7 +18,7 @@ if (!$GUIDE)
 	exit;
 }
 
-$count = $db->SQL('SELECT COUNT(1) as count FROM reports');
+$count = webcp_db_fetchall('SELECT COUNT(1) as count FROM reports');
 $count = $count[0]['count'];
 
 if ($count == 0)
@@ -38,7 +38,7 @@ if ($page < 1 || $page > $pages)
 
 $start = ($page-1) * $perpage;
 
-$reports = $db->SQL("SELECT reporter, reported, reason, time FROM reports ORDER BY time DESC LIMIT #,#", $start, $perpage);
+$reports = webcp_db_fetchall("SELECT reporter, reported, reason, time FROM reports ORDER BY time DESC LIMIT ?,?", $start, $perpage);
 
 foreach ($reports as &$report)
 {

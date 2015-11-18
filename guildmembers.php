@@ -11,7 +11,7 @@ if (empty($_GET['tag']))
 	exit;
 }
 
-$guild = $db->SQL("SELECT * FROM guilds WHERE tag = '$'", strtoupper($_GET['tag']));
+$guild = webcp_db_fetchall("SELECT * FROM guilds WHERE tag = ?", strtoupper($_GET['tag']));
 if (empty($guild[0]))
 {
 	$tpl->message = 'Guild does not exist.';
@@ -25,7 +25,7 @@ $guild['ranks'] = explode(',', $guild['ranks']);
 
 $tpl->guild = $guild;
 
-$count = $db->SQL("SELECT COUNT(1) as count FROM characters WHERE guild = '$'", $guild['tag']);
+$count = webcp_db_fetchall("SELECT COUNT(1) as count FROM characters WHERE guild = ?", $guild['tag']);
 $count = $count[0]['count'];
 
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -38,7 +38,7 @@ if ($page < 1 || $page > $pages)
 
 $start = ($page-1) * $perpage;
 
-$members = $db->SQL("SELECT * FROM characters WHERE guild = '$' ORDER BY guild_rank ASC, name ASC LIMIT #,#", $guild['tag'], $start, $perpage);
+$members = webcp_db_fetchall("SELECT * FROM characters WHERE guild = ? ORDER BY guild_rank ASC, name ASC LIMIT ?,?", $guild['tag'], $start, $perpage);
 
 foreach ($members as &$member)
 {

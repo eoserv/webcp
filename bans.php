@@ -18,7 +18,7 @@ if (!$GUARDIAN)
 	exit;
 }
 
-$count = $db->SQL('SELECT COUNT(1) as count FROM bans');
+$count = webcp_db_fetchall('SELECT COUNT(1) as count FROM bans');
 $count = $count[0]['count'];
 
 if ($count == 0)
@@ -33,8 +33,8 @@ if (isset($_POST['action']))
 	switch($_POST['action'])
 	{
 		case 'cleanup':
-			$db->SQL("DELETE FROM bans WHERE expires < # AND expires != 0", time());
-			$tpl->message = $db->AffectedRows()." ban(s) removed.";
+			$rows = webcp_db_execute("DELETE FROM bans WHERE expires < ? AND expires != 0", time());
+			$tpl->message = $rows." ban(s) removed.";
 			break;
 
 		case 'unban':
@@ -73,8 +73,8 @@ if (isset($_POST['action']))
 				$tpl->Execute('error');
 				exit;
 			}
-			$db->SQL("DELETE FROM bans WHERE $col = $val AND expires != 0", time());
-			$tpl->message = $db->AffectedRows()." ban(s) removed.";
+			$rows = webcp_db_execute("DELETE FROM bans WHERE $col = $val AND expires != 0", time());
+			$tpl->message = $rows ." ban(s) removed.";
 			break;
 	}
 }
@@ -89,7 +89,7 @@ if ($page < 1 || $page > $pages)
 
 $start = ($page-1) * $perpage;
 
-$bans = $db->SQL("SELECT * FROM bans ORDER BY expires DESC LIMIT #,#", $start, $perpage);
+$bans = webcp_db_fetchall("SELECT * FROM bans ORDER BY expires DESC LIMIT ?,?", $start, $perpage);
 
 foreach ($bans as &$ban)
 {

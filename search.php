@@ -61,7 +61,7 @@ if (!empty($_GET['searchtype']))
 				$username = strtolower($_GET['username']);
 				$computer = strtoupper($_GET['computer']);
 
-				$count = $db->SQL("SELECT COUNT(1) as count FROM accounts WHERE username LIKE '$' AND computer LIKE '$'$hdidq$ipq", $username, $computer);
+				$count = webcp_db_fetchall("SELECT COUNT(1) as count FROM accounts WHERE username LIKE ? AND computer LIKE ?$hdidq$ipq", $username, $computer);
 				$count = $count[0]['count'];
 
 				$page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -81,15 +81,17 @@ if (!empty($_GET['searchtype']))
 					return;
 				}
 				
-				$accounts = $db->SQL("SELECT * FROM accounts WHERE username LIKE '$' AND computer LIKE '$'$hdidq$ipq LIMIT #,#", $username, $computer, $start, $perpage);
+				$accounts = webcp_db_fetchall("SELECT * FROM accounts WHERE username LIKE ? AND computer LIKE ?$hdidq$ipq LIMIT ?,?", $username, $computer, $start, $perpage);
 
 				$acclistq = '';
+				$acclistqa = array();
 
 				foreach ($accounts as &$account)
 				{
 					$account['hdid_str'] = sprintf("%08x", (double)$account['hdid']);
 					$account['hdid_str'] = strtoupper(substr($account['hdid_str'],0,4).'-'.substr($account['hdid_str'],4,4));
-					$acclistq .= "account = '".$db->Escape($account['username'])."' OR ";
+					$acclistq .= "account = ? OR ";
+					$acclistqa[] = $account['username'];
 				}
 				unset($account);
 
@@ -100,7 +102,7 @@ if (!empty($_GET['searchtype']))
 					trigger_error("No accounts were selected");
 				}
 
-				$charcounts = $db->SQL("SELECT name,admin,account FROM characters WHERE $acclistq");
+				$charcounts = webcp_db_fetchall_array("SELECT name,admin,account FROM characters WHERE $acclistq", $acclistqa);
 
 				foreach ($accounts as $i => &$account)
 				{
@@ -153,7 +155,7 @@ if (!empty($_GET['searchtype']))
 			{
 				$name = strtolower($_GET['name']);
 				
-				$count = $db->SQL("SELECT COUNT(1) as count FROM characters WHERE name LIKE '$'", $name);
+				$count = webcp_db_fetchall("SELECT COUNT(1) as count FROM characters WHERE name LIKE ?", $name);
 				$count = $count[0]['count'];
 
 				$page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -173,7 +175,7 @@ if (!empty($_GET['searchtype']))
 					return;
 				}
 				
-				$characters = $db->SQL("SELECT * FROM characters WHERE name LIKE '$' LIMIT #,#", $name, $start, $perpage);
+				$characters = webcp_db_fetchall("SELECT * FROM characters WHERE name LIKE ? LIMIT ?,?", $name, $start, $perpage);
 
 				foreach ($characters as &$character)
 				{
@@ -216,7 +218,7 @@ if (!empty($_GET['searchtype']))
 				$tag = strtoupper($_GET['tag']);
 				$name = strtolower($_GET['name']);
 
-				$count = $db->SQL("SELECT COUNT(1) as count FROM guilds WHERE tag LIKE '$' AND name LIKE '$'", $tag, $name);
+				$count = webcp_db_fetchall("SELECT COUNT(1) as count FROM guilds WHERE tag LIKE ? AND name LIKE ?", $tag, $name);
 				$count = $count[0]['count'];
 
 				$page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -236,12 +238,12 @@ if (!empty($_GET['searchtype']))
 					return;
 				}
 				
-				$guilds = $db->SQL("SELECT * FROM guilds WHERE tag LIKE '$' AND name LIKE '$' LIMIT #,#", $tag, $name, $start, $perpage);
+				$guilds = webcp_db_fetchall("SELECT * FROM guilds WHERE tag LIKE ? AND name LIKE ? LIMIT ?,?", $tag, $name, $start, $perpage);
 
 				foreach ($guilds as &$guild)
 				{
-					$membercount = $db->SQL("SELECT COUNT(1) as count FROM characters WHERE guild = '$'", $guild['tag']);
-					$totalexp = $db->SQL("SELECT SUM(exp) as totalexp FROM characters WHERE guild = '$' AND admin = 0", $guild['tag']);
+					$membercount = webcp_db_fetchall("SELECT COUNT(1) as count FROM characters WHERE guild = ?", $guild['tag']);
+					$totalexp = webcp_db_fetchall("SELECT SUM(exp) as totalexp FROM characters WHERE guild = ? AND admin = 0", $guild['tag']);
 					$guild['tag'] = trim(strtoupper($guild['tag']));
 					$guild['name'] = ucfirst($guild['name']);
 					$guild['members'] = number_format($membercount[0]['count']);
