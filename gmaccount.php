@@ -25,7 +25,7 @@ if (empty($_GET['name']))
 	exit;
 }
 
-$account = $db->SQL("SELECT * FROM accounts WHERE username = '$'", strtolower($_GET['name']));
+$account = webcp_db_fetchall("SELECT * FROM accounts WHERE username = ?", strtolower($_GET['name']));
 if (empty($account[0]))
 {
 	$tpl->message = 'Account does not exist.';
@@ -42,7 +42,7 @@ $account['lastused_str'] = date('r', $account['lastused']);
 
 $tpl->account = $account;
 
-$characters = $db->SQL("SELECT * FROM characters WHERE account = '$' ORDER BY exp DESC", strtolower($_GET['name']));
+$characters = webcp_db_fetchall("SELECT * FROM characters WHERE account = ? ORDER BY exp DESC", strtolower($_GET['name']));
 
 foreach ($characters as &$character)
 {

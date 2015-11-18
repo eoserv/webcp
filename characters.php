@@ -11,7 +11,7 @@ if (!$logged)
 	exit;
 }
 
-$characters = $db->SQL("SELECT * FROM characters WHERE account = '$' ORDER BY exp DESC", $sess->username);
+$characters = webcp_db_fetchall("SELECT * FROM characters WHERE account = ? ORDER BY exp DESC", $sess->username);
 
 foreach ($characters as &$character)
 {

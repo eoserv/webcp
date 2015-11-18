@@ -19,14 +19,14 @@ if (!empty($_POST['fullname']) && !empty($_POST['location']) && !empty($_POST['e
 	}
 	else
 	{
-		$db->SQL("UPDATE accounts SET fullname = '$', location = '$', email = '$' WHERE username = '$'", $_POST['fullname'], $_POST['location'], $_POST['email'], $sess->username);
-		if ($db->AffectedRows() != 1)
+		$rows = webcp_db_execute("UPDATE accounts SET fullname = ?, location = ?, email = ? WHERE username = ?", $_POST['fullname'], $_POST['location'], $_POST['email'], $sess->username);
+		if ($rows !== 1)
 		{
 			$tpl->message = "Failed to update account info.";
 		}
 		else
 		{
-			$userdata = $db->SQL("SELECT * FROM accounts WHERE username = '$'", $sess->username);
+			$userdata = webcp_db_fetchall("SELECT * FROM accounts WHERE username = ?", $sess->username);
 			$tpl->userdata = $sess->userdata = $userdata[0];
 			$tpl->message = "Account details updated.";
 		}
@@ -67,8 +67,8 @@ if (!empty($_POST['currentpassword']) && !empty($_POST['newpassword']) && !empty
 				$newpassword = seose_str_hash($newpassword, $seose_compat_key);
 			
 			$newpassword = hash('sha256',$salt.($sess->username).$newpassword);
-			$db->SQL("UPDATE accounts SET password = '$' WHERE username = '$'", $newpassword, $sess->username);
-			if ($db->AffectedRows() != 1)
+			$rows = webcp_db_execute("UPDATE accounts SET password = ? WHERE username = ?", $newpassword, $sess->username);
+			if ($rows !== 1)
 			{
 				$tpl->message = $tpl->message . "Failed to update password.";
 			}

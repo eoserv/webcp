@@ -5,7 +5,7 @@ $pagetitle = 'Top Players';
 require 'common.php';
 
 $tpl->limit = $topplayers;
-$characters = $db->SQL("SELECT name, title, level, exp, gender FROM characters WHERE admin = 0 ORDER BY exp DESC LIMIT #", $topplayers);
+$characters = webcp_db_fetchall("SELECT name, title, level, exp, gender FROM characters WHERE admin = 0 ORDER BY exp DESC LIMIT ?", $topplayers);
 
 foreach ($characters as &$character)
 {

@@ -4,7 +4,7 @@ $pagetitle = 'Staff Characters';
 
 require 'common.php';
 
-$characters = $db->SQL("SELECT name, gender, title, admin FROM characters WHERE admin > 0 ORDER BY admin DESC");
+$characters = webcp_db_fetchall("SELECT name, gender, title, admin FROM characters WHERE admin > 0 ORDER BY admin DESC");
 
 if (empty($characters))
 {

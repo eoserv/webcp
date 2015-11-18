@@ -21,11 +21,11 @@ if (empty($_GET['name']))
 
 if ($GM)
 {
-	$character = $db->SQL("SELECT * FROM characters WHERE name = '$' LIMIT 1", strtolower($_GET['name']));
+	$character = webcp_db_fetchall("SELECT * FROM characters WHERE name = ? LIMIT 1", strtolower($_GET['name']));
 }
 else
 {
-	$character = $db->SQL("SELECT * FROM characters WHERE name = '$' AND account = '$' LIMIT 1", strtolower($_GET['name']), $sess->username);
+	$character = webcp_db_fetchall("SELECT * FROM characters WHERE name = ? AND account = ? LIMIT 1", strtolower($_GET['name']), $sess->username);
 }
 
 if (empty($character))
@@ -49,7 +49,7 @@ $character['paperdoll'] = unserialize_paperdoll($character['paperdoll']);
 $character['spells'] = unserialize_spells($character['spells']);
 if (!empty($character['guild']))
 {
-	$guildinfo = $db->SQL("SELECT * FROM guilds WHERE tag = '$'", $character['guild']);
+	$guildinfo = webcp_db_fetchall("SELECT * FROM guilds WHERE tag = ?", $character['guild']);
 	if (!empty($guildinfo[0]))
 	{
 		$character['guild_name'] = ucfirst($guildinfo[0]['name']);
