@@ -41,12 +41,12 @@ if (isset($_POST['action']))
 			if (isset($_POST['input'], $_POST['unban-username']))
 			{
 				$col = 'username';
-				$val = '\''.$db->Escape($_POST['input']).'\'';
+				$val = $_POST['input'];
 			}
 			elseif (isset($_POST['input'], $_POST['unban-ip']))
 			{
 				$col = 'ip';
-				$val = ip2long($db->Escape($_POST['input']));
+				$val = ip2long($_POST['input']);
 				if (!$val)
 				{
 					$tpl->error = 'Malformed IP address.';
@@ -73,7 +73,7 @@ if (isset($_POST['action']))
 				$tpl->Execute('error');
 				exit;
 			}
-			$rows = webcp_db_execute("DELETE FROM bans WHERE $col = $val AND expires != 0", time());
+			$rows = webcp_db_execute("DELETE FROM bans WHERE $col = ? AND expires != 0", time(), $val);
 			$tpl->message = $rows ." ban(s) removed.";
 			break;
 	}

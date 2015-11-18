@@ -98,12 +98,7 @@ function webcp_debug_info()
 	global $db;
 	global $starttime;
 	$exectime = number_format((microtime(true) - $starttime)*1000, 1);
-	echo "Total execution time: $exectime ms<br>";
-	foreach ($db->Debug() as $query)
-	{
-		$exectime = number_format($query[1], 1);
-		echo htmlentities($query[0])." -- ($exectime ms)<br>";
-	}
+	echo "Total execution time: $exectime ms";
 }
 
 if (!function_exists('hash'))
@@ -261,7 +256,7 @@ if (!empty($NEEDPUB))
 {
 	require 'class/EIFReader.class.php';
 
-	if ($pubcache && file_exists('eif.cache') && filemtime('eif.cache') < filemtime($pubfiles.'/dat001.eif'))
+	if ($pubcache && file_exists('eif.cache') && filemtime('eif.cache') >= filemtime($pubfiles.'/dat001.eif'))
 	{
 		$eoserv_items = unserialize(file_get_contents('eif.cache'));
 	}
@@ -276,7 +271,7 @@ if (!empty($NEEDPUB))
 
 	require 'class/ECFReader.class.php';
 
-	if ($pubcache && file_exists('ecf.cache') && filemtime('ecf.cache') < filemtime($pubfiles.'/dat001.ecf'))
+	if ($pubcache && file_exists('ecf.cache') && filemtime('ecf.cache') >= filemtime($pubfiles.'/dat001.ecf'))
 	{
 		$eoserv_classes = unserialize(file_get_contents('ecf.cache'));
 	}
@@ -291,7 +286,7 @@ if (!empty($NEEDPUB))
 
 	require 'class/ESFReader.class.php';
 
-	if ($pubcache && file_exists('esf.cache') && filemtime('esf.cache') < filemtime($pubfiles.'/dsl001.esf'))
+	if ($pubcache && file_exists('esf.cache') && filemtime('esf.cache') >= filemtime($pubfiles.'/dsl001.esf'))
 	{
 		$eoserv_spells = unserialize(file_get_contents('esf.cache'));
 	}
