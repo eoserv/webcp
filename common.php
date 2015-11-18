@@ -183,14 +183,34 @@ catch (Exception $e)
 	exit("Database connection failed. (".$e->getMessage().")");
 }
 
+function webcp_db_execute_typed($statement, $params = null)
+{
+	for ($i = 0; $i < count($params); ++$i)
+	{
+		$p = $params[$i];
+
+		if (is_null($p))
+			$statement->bindValue($i + 1, $p, PDO::PARAM_NULL);
+		else if (is_int($p))
+			$statement->bindValue($i + 1, $p, PDO::PARAM_INT);
+		else
+			$statement->bindValue($i + 1, $p, PDO::PARAM_STR);
+	}
+
+	return $statement->execute();
+}
+
 function webcp_db_execute_array($sql, $params = null)
 {
 	global $db;
-
-	$sql = $db->prepare($sql);
 	
-	if ($sql->execute($params))
-		return $sql->rowCount();
+	if (is_null($params))
+		$params = array();
+
+	$statement = $db->prepare($sql);
+	
+	if (webcp_db_execute_typed($statement, $params))
+		return $statement->rowCount();
 	else
 		return false;
 }
@@ -199,10 +219,13 @@ function webcp_db_fetchall_array($sql, $params = null)
 {
 	global $db;
 
-	$sql = $db->prepare($sql);
+	if (is_null($params))
+		$params = array();
+
+	$statement = $db->prepare($sql);
 	
-	if ($sql->execute($params))
-		return $sql->fetchAll(PDO::FETCH_ASSOC);
+	if (webcp_db_execute_typed($statement, $params))
+		return $statement->fetchAll(PDO::FETCH_ASSOC);
 	else
 		return array();
 }
