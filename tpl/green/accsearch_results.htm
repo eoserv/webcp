@@ -3,9 +3,9 @@
 <form action="" method="GET">
 <input type="hidden" name="searchtype" value="account">
 <input type="hidden" name="username" value="<[~_GET.username]>">
-<input type="hidden" name="ip" value="<[~original_ip]>">
 <input type="hidden" name="computer" value="<[~original_computer]>">
 <input type="hidden" name="hdid" value="<[~original_hdid]>">
+<input type="hidden" name="ip" value="<[~original_ip]>">
 <label for="page">Page:</label> <input type="text" name="page" id="page" value="<[page]>" size="3">/<[pages]> <input type="submit" value="Go">
 </form>
 </div>
@@ -32,9 +32,9 @@
 <[if acc.characters]> )<[endif]>
 
 
-			<td><a href="search<[php]>?searchtype=account&computer=<[~acc.computer]>&csrf=<[csrf]>"><[~acc.computer_str]></a>
+			<td><a href="search<[php]>?searchtype=account&computer=<[~acc.computer]>"><[~acc.computer_str]></a>
 
-			<td><a href="search<[php]>?searchtype=account&hdid=<[acc.hdid_str]>&csrf=<[csrf]>"><[acc.hdid_str]></a>
+			<td><a href="search<[php]>?searchtype=account&hdid=<[acc.hdid_str]>"><[acc.hdid_str]></a>
 
 <[endforeach]>
 </table>

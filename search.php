@@ -2,10 +2,6 @@
 
 $pagetitle = 'Search';
 
-if (isset($_GET['searchtype']) && count($_GET) > 1)
-{
-	$checkcsrf = true;
-}
 require 'common.php';
 
 if (!$logged)
@@ -142,7 +138,7 @@ if (!empty($_GET['searchtype']))
 
 				unset($account);
 
-				$pagination = generate_pagination($pages, $page, '?searchtype=account&username='.urlencode($_GET['username']).'&ip='.urlencode($original_ip).'&computer='.urlencode($original_computer).'&hdid='.urlencode($original_hdid).'&csrf='.$csrf);
+				$pagination = generate_pagination($pages, $page, '?searchtype=account&username='.urlencode($_GET['username']).'&computer='.urlencode($original_computer).'&hdid='.urlencode($original_hdid).'&ip='.urlencode($original_ip));
 
 				$tpl->page = $page;
 				$tpl->pages = $pages;
@@ -208,7 +204,7 @@ if (!empty($_GET['searchtype']))
 				}
 				unset($character);
 
-				$pagination = generate_pagination($pages, $page, '?searchtype=character&name='.urlencode($_GET['name']).'&csrf='.$csrf);
+				$pagination = generate_pagination($pages, $page, '?searchtype=character&name='.urlencode($_GET['name']));
 
 				$tpl->page = $page;
 				$tpl->pages = $pages;
@@ -271,7 +267,7 @@ if (!empty($_GET['searchtype']))
 				}
 				unset($guild);
 
-				$pagination = generate_pagination($pages, $page, '?searchtype=guild&tag='.urlencode($_GET['tag']).'&name='.urlencode($_GET['name']).'&csrf='.$csrf);
+				$pagination = generate_pagination($pages, $page, '?searchtype=guild&tag='.urlencode($_GET['tag']).'&name='.urlencode($_GET['name']));
 
 				$tpl->page = $page;
 				$tpl->pages = $pages;

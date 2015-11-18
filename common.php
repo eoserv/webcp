@@ -599,7 +599,7 @@ $tpl->chardata_guilds = $chardata_guilds;
 function trans_form($buffer)
 {
 	global $csrf;
-	$buffer = str_replace('</form>','<input type="hidden" name="csrf" value="'.$csrf.'">'."\n".'</form>', $buffer);
+	$buffer = preg_replace('/<form(.*?)method="POST">/i', '<form\1method="POST"><input type="hidden" name="csrf" value="'.$csrf.'">', $buffer);
 	return $buffer;
 }
 
