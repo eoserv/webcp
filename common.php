@@ -111,9 +111,9 @@ if (array_search('sha256',hash_algos()) === false)
 	exit("Could not find the the sha256 hash algorithm.");
 }
 
-if (!function_exists('mysql_connect') && !class_exists('PDO'))
+if (!class_exists('PDO'))
 {
-	exit("Could not find the the mysql or PDO PHP extensions.");
+	exit("Could not find the the PDO PHP extension.");
 }
 
 define('ADMIN_HGM', 4);
