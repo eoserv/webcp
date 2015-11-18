@@ -53,6 +53,11 @@ $pubcache = true;
 // Turning this on will cause HTTP 400 errors if you refresh a form, but provides a little more security
 $dynamiccsrf = false;
 
+// Setting this to false will disable the display the sum of bank gold on the front page
+// Setting this to true will always display the sum of bank gold on the front page
+// Leaving it unset will display only when there are less than 10,000 characters
+//$showbankgold = false;
+
 // Print debug info at the bottom of the page (never use this on live servers)
 $DEBUG = false;
 

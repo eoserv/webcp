@@ -30,20 +30,7 @@ class ECFReader
 			$name = substr($filedata, $fi, $namelen); $fi += $namelen;
 			$newdata->name = $name;
 			
-			$fi += 1;
-			$fi += 1;
-			$fi += 1;
-			$fi += 1;
-			$fi += 1;
-			$fi += 1;
-			$fi += 1;
-			$fi += 1;
-			$fi += 1;
-			$fi += 1;
-			$fi += 1;
-			$fi += 1;
-			$fi += 1;
-			$fi += 1;
+			$fi += 14;
 
 			array_push($this->data, $newdata);
 		}
