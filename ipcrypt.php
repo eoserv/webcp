@@ -34,7 +34,7 @@ function webcp_encrypt_ip($ip)
 
 	$ipcrypt_key = get_ipcrypt_key($ipcrypt);
 
-	$ip_dec = inet_pton($ip);
+	$ip_dec = @inet_pton($ip);
 
 	if (is_numeric($ip))
 		$ipbytes = pack('N', $ip);
