@@ -254,64 +254,63 @@ if (!is_file($pubfiles.'/dtn001.enf'))
 
 if (!empty($NEEDPUB))
 {
-	require 'class/EIFReader.class.php';
+	if (!empty($NEEDPUB['EIF']))
+	{
+		require 'class/EIFReader.class.php';
+		$eoserv_items_cache = null;
 
-	if ($pubcache && file_exists('eif.cache') && filemtime('eif.cache') >= filemtime($pubfiles.'/dat001.eif'))
-	{
-		$eoserv_items = unserialize(file_get_contents('eif.cache'));
-	}
-	else
-	{
-		$eoserv_items = new EIFReader("$pubfiles/dat001.eif");
-		if ($pubcache)
-		{
-			file_put_contents('eif.cache', serialize($eoserv_items));
-		}
-	}
+		if ($pubcache && file_exists('eif.cache') && filemtime('eif.cache') >= filemtime($pubfiles.'/dat001.eif'))
+			$eoserv_items_cache = EIFReader::LoadCache('eif.cache');
 
-	require 'class/ECFReader.class.php';
-
-	if ($pubcache && file_exists('ecf.cache') && filemtime('ecf.cache') >= filemtime($pubfiles.'/dat001.ecf'))
-	{
-		$eoserv_classes = unserialize(file_get_contents('ecf.cache'));
-	}
-	else
-	{
-		$eoserv_classes = new ECFReader("$pubfiles/dat001.ecf");
-		if ($pubcache)
-		{
-			file_put_contents('ecf.cache', serialize($eoserv_classes));
-		}
+		$eoserv_items = new EIFReader("$pubfiles/dat001.eif", $eoserv_items_cache);
+	
+		if ($eoserv_items->NeedCacheUpdate())
+			file_put_contents('eif.cache', $eoserv_items->GetCache());
 	}
 
-	require 'class/ESFReader.class.php';
+	if (!empty($NEEDPUB['ECF']))
+	{
+		require 'class/ECFReader.class.php';
 
-	if ($pubcache && file_exists('esf.cache') && filemtime('esf.cache') >= filemtime($pubfiles.'/dsl001.esf'))
-	{
-		$eoserv_spells = unserialize(file_get_contents('esf.cache'));
-	}
-	else
-	{
-		$eoserv_spells = new ESFReader("$pubfiles/dsl001.esf");
-		if ($pubcache)
-		{
-			file_put_contents('esf.cache', serialize($eoserv_spells));
-		}
+		$eoserv_classes_cache = null;
+
+		if ($pubcache && file_exists('ecf.cache') && filemtime('ecf.cache') >= filemtime($pubfiles.'/dat001.ecf'))
+			$eoserv_classes_cache = ECFReader::LoadCache('ecf.cache');
+		
+		$eoserv_classes = new ECFReader("$pubfiles/dat001.ecf", $eoserv_classes_cache);
+
+		if ($eoserv_classes->NeedCacheUpdate())
+			file_put_contents('ecf.cache', $eoserv_classes->GetCache());
 	}
 
-	require 'class/ENFReader.class.php';
+	if (!empty($NEEDPUB['ENF']))
+	{
+		require 'class/ENFReader.class.php';
 
-	if ($pubcache && file_exists('enf.cache') && filemtime('enf.cache') >= filemtime($pubfiles.'/dtn001.enf'))
-	{
-		$eoserv_npcs = unserialize(file_get_contents('enf.cache'));
+		$eoserv_npcs_cache = null;
+
+		if ($pubcache && file_exists('enf.cache') && filemtime('enf.cache') >= filemtime($pubfiles.'/dtn001.enf'))
+			$eoserv_npcs_cache = ENFReader::LoadCache('enf.cache');
+		
+		$eoserv_npcs = new ENFReader("$pubfiles/dtn001.enf", $eoserv_npcs_cache);
+
+		if ($eoserv_npcs->NeedCacheUpdate())
+			file_put_contents('enf.cache', $eoserv_npcs->GetCache());
 	}
-	else
+
+	if (!empty($NEEDPUB['ESF']))
 	{
-		$eoserv_npcs = new ENFReader("$pubfiles/dtn001.enf");
-		if ($pubcache)
-		{
-			file_put_contents('enf.cache', serialize($eoserv_npcs));
-		}
+		require 'class/ESFReader.class.php';
+
+		$eoserv_spells_cache = null;
+
+		if ($pubcache && file_exists('esf.cache') && filemtime('esf.cache') >= filemtime($pubfiles.'/dsl001.esf'))
+			$eoserv_spells_cache = ESFReader::LoadCache('esf.cache');
+		
+		$eoserv_spells = new ESFReader("$pubfiles/dsl001.esf", $eoserv_spells_cache);
+
+		if ($eoserv_spells->NeedCacheUpdate())
+			file_put_contents('esf.cache', $eoserv_spells->GetCache());
 	}
 }
 

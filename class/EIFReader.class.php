@@ -27,18 +27,58 @@ class EIF_Data
 		var $dollgraphic;
 		var $expreward;
 
-	var $gender;
-		var $scrollx;
+	var $scrollx;
+		var $gender;
 	var $scrolly;
 
 	var $classreq;
 
 	var $weight;
+
+	function __construct($id, $data = null)
+	{
+		$this->id = $id;
+
+		if (!is_null($data))
+		{
+			list(
+				$this->name,
+				$this->graphic,
+				$this->type,
+				$this->special,
+				$this->hp,
+				$this->tp,
+				$this->mindam,
+				$this->maxdam,
+				$this->accuracy,
+				$this->evade,
+				$this->armor,
+				$this->str,
+				$this->intl,
+				$this->wis,
+				$this->agi,
+				$this->con,
+				$this->cha,
+				$this->scrollmap,
+				$this->scrollx,
+				$this->scrolly,
+				$this->classreq,
+				$this->weight
+			) = $data;
+
+			$this->dollgraphic = &$this->scrollmap;
+			$this->expreward   = &$this->scrollmap;
+
+			$this->gender = &$this->scrollx;
+		}
+	}
 }
 
 class EIFReader
 {
+	private $filename;
 	private $data;
+	private $fresh = false;
 	const DATA_SIZE = 58;
 
 	static function TypeString($type)
@@ -80,9 +120,19 @@ class EIFReader
 		return isset($types[$type])?$types[$type]:'';
 	}
 
-	function __construct($filename)
+	function __construct($filename, $cache = null)
 	{
-		$this->data = array(0 => new EIF_Data);
+		$this->filename = $filename;
+
+		if (!is_null($cache) && isset($cache['filename'], $cache['version'])
+		 && $cache['filename'] == $filename && $cache['version'] == 2)
+		{
+			$this->data = $cache['data'];
+			return;
+		}
+
+		$this->data = array();
+		$this->fresh = true;
 		$filedata = file_get_contents($filename);
 		
 		$rid = substr($filedata, 3, 4);
@@ -92,55 +142,81 @@ class EIFReader
 		$fi = 10;
 		for ($i = 0; $i < $len; ++$i)
 		{
-			$newdata = new EIF_Data;
+			$newdata = array();
 			
-			$newdata->id = $i+1;
 			$namelen = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
 			$name = substr($filedata, $fi, $namelen); $fi += $namelen;
-			$newdata->name = $name;
+			$newdata[] = $name;
 			
-			$newdata->graphic = Number(ord(substr($filedata, $fi, 1)), ord(substr($filedata, $fi+1, 1))); $fi += 2;
-			$newdata->type = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1)), ord(substr($filedata, $fi+1, 1))); $fi += 2;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
 			$fi += 1;
-			$newdata->special = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
-			$newdata->hp = Number(ord(substr($filedata, $fi, 1)), ord(substr($filedata, $fi+1, 1))); $fi += 2;
-			$newdata->tp = Number(ord(substr($filedata, $fi, 1)), ord(substr($filedata, $fi+1, 1))); $fi += 2;
-			$newdata->mindam = Number(ord(substr($filedata, $fi, 1)), ord(substr($filedata, $fi+1, 1))); $fi += 2;
-			$newdata->maxdam = Number(ord(substr($filedata, $fi, 1)), ord(substr($filedata, $fi+1, 1))); $fi += 2;
-			$newdata->accuracy = Number(ord(substr($filedata, $fi, 1)), ord(substr($filedata, $fi+1, 1))); $fi += 2;
-			$newdata->evade = Number(ord(substr($filedata, $fi, 1)), ord(substr($filedata, $fi+1, 1))); $fi += 2;
-			$newdata->armor = Number(ord(substr($filedata, $fi, 1)), ord(substr($filedata, $fi+1, 1))); $fi += 2;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1)), ord(substr($filedata, $fi+1, 1))); $fi += 2;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1)), ord(substr($filedata, $fi+1, 1))); $fi += 2;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1)), ord(substr($filedata, $fi+1, 1))); $fi += 2;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1)), ord(substr($filedata, $fi+1, 1))); $fi += 2;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1)), ord(substr($filedata, $fi+1, 1))); $fi += 2;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1)), ord(substr($filedata, $fi+1, 1))); $fi += 2;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1)), ord(substr($filedata, $fi+1, 1))); $fi += 2;
 			$fi += 1;
-			$newdata->str = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
-			$newdata->intl = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
-			$newdata->wis = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
-			$newdata->agi = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
-			$newdata->con = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
-			$newdata->cha = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
 			$fi += 6;
-			$newdata->scrollmap = $newdata->dollgraphic = $newdata->expreward = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
 			$fi += 2;
-			$newdata->gender = $newdata->scrollx = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
-			$newdata->scrolly = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
 			$fi += 2;
-			$newdata->classreq = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
 			$fi += 15;
-			$newdata->weight = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
+			$newdata[] = Number(ord(substr($filedata, $fi, 1))); $fi += 1;
 			$fi += 2;
 
 			array_push($this->data, $newdata);
 		}
+		
+		if ($this->data[count($this->data) - 1][0] == "eof")
+			array_pop($this->data);
 	}
 
 	function Get($id)
 	{
-		if (isset($this->data[$id]))
+		if ($id > 0 && $id <= count($this->data))
 		{
-			return $this->data[$id];
+			return new EIF_Data($id, $this->data[$id - 1]);
 		}
 		else
 		{
-			return new EIF_Data;
+			return new EIF_Data($id);
 		}
+	}
+
+	function Count()
+	{
+		return count($this->data);
+	}
+
+	static function LoadCache($filename)
+	{
+		return unserialize(file_get_contents($filename));
+	}
+
+	function NeedCacheUpdate()
+	{
+		return $this->fresh;
+	}
+
+	function GetCache()
+	{
+		return serialize(array(
+			'filename' => $this->filename,
+			'version' => 2,
+			'data' => $this->data
+		));
 	}
 }
