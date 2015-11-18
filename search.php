@@ -34,6 +34,15 @@ if (!empty($_GET['searchtype']))
 
 			if (isset($_GET['username'],$_GET['computer'],$_GET['hdid'],$_GET['ip']))
 			{
+				if ($_GET['computer'] != '%')
+					$_GET['computer'] = webcp_decrypt_computer($_GET['computer']);
+
+				if ($_GET['hdid'] != '')
+					$_GET['hdid'] = webcp_decrypt_hdid($_GET['hdid']);
+
+				if ($_GET['ip'] != '')
+					$_GET['ip'] = webcp_decrypt_ip($_GET['ip']);
+
 				$hdid = explode('-', $_GET['hdid']);
 				if (isset($hdid[1]))
 				{
@@ -59,7 +68,7 @@ if (!empty($_GET['searchtype']))
 				}
 
 				$username = strtolower($_GET['username']);
-				$computer = strtoupper($_GET['computer']);
+				$computer = strtoupper(rtrim($_GET['computer']));
 
 				$count = webcp_db_fetchall("SELECT COUNT(1) as count FROM accounts WHERE username LIKE ? AND computer LIKE ?$hdidq$ipq", $username, $computer);
 				$count = $count[0]['count'];
@@ -88,8 +97,11 @@ if (!empty($_GET['searchtype']))
 
 				foreach ($accounts as &$account)
 				{
+					$account['computer'] = webcp_encrypt_computer($account['computer']);
+					$account['computer_str'] = webcp_trunc($account['computer'], 15);
 					$account['hdid_str'] = sprintf("%08x", (double)$account['hdid']);
 					$account['hdid_str'] = strtoupper(substr($account['hdid_str'],0,4).'-'.substr($account['hdid_str'],4,4));
+					$account['hdid_str'] = webcp_encrypt_hdid($account['hdid_str']);
 					$acclistq .= "account = ? OR ";
 					$acclistqa[] = $account['username'];
 				}

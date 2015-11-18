@@ -101,6 +101,16 @@ function webcp_debug_info()
 	echo "Total execution time: $exectime ms";
 }
 
+function webcp_trunc($word, $len)
+{
+	if (strlen($word) < $len + 3)
+		return $word;
+
+	return substr($word, 0, $len) . '...';
+}
+
+require 'ipcrypt.php';
+
 if (!function_exists('hash'))
 {
 	exit("Could not find the the hash PHP extension.");
@@ -480,7 +490,7 @@ if (isset($_REQUEST['action']))
 					$password = seose_str_hash($password, $seose_compat_key);
 
 				$password = hash('sha256',$salt.strtolower($_POST['username']).$password);
-				$checklogin = webcp_db_fetchall("SELECT username FROM accounts WHERE username = ? AND password = '$'", strtolower($_POST['username']), $password);
+				$checklogin = webcp_db_fetchall("SELECT username FROM accounts WHERE username = ? AND password = ?", strtolower($_POST['username']), $password);
 				if (empty($checklogin))
 				{
 					$tpl->message = "Login failed.";

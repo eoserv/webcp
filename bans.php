@@ -46,7 +46,7 @@ if (isset($_POST['action']))
 			elseif (isset($_POST['input'], $_POST['unban-ip']))
 			{
 				$col = 'ip';
-				$val = ip2long($_POST['input']);
+				$val = ip2long(webcp_decrypt_ip($_POST['input']));
 				if (!$val)
 				{
 					$tpl->error = 'Malformed IP address.';
@@ -57,7 +57,7 @@ if (isset($_POST['action']))
 			elseif (isset($_POST['input'], $_POST['unban-hdid']))
 			{
 				$col = 'hdid';
-				$hdid = explode('-', $_POST['input']);
+				$hdid = explode('-', webcp_decrypt_hdid($_POST['input']));
 				if (isset($hdid[1]))
 				{
 					$val = hexdec($hdid[0]) * 0x10000 + hexdec($hdid[1]);
@@ -73,7 +73,7 @@ if (isset($_POST['action']))
 				$tpl->Execute('error');
 				exit;
 			}
-			$rows = webcp_db_execute("DELETE FROM bans WHERE $col = ? AND expires != 0", time(), $val);
+			$rows = webcp_db_execute("DELETE FROM bans WHERE $col = ?", $val);
 			$tpl->message = $rows ." ban(s) removed.";
 			break;
 	}
@@ -97,12 +97,21 @@ foreach ($bans as &$ban)
 	$ban['nouser'] = $ban['username']===null;
 	$ban['noip'] = $ban['ip']===null;
 	$ban['nohdid'] = $ban['hdid']===null;
-	$ban['ip_str'] = $ban['ip']===null?'-':long2ip($ban['ip']);
+	$ban['ip_str'] = $ban['ip']===null?'-':webcp_encrypt_ip(long2ip($ban['ip']));
 	$ban['setter'] = ucfirst($ban['setter']);
-	$ban['hdid_str'] = sprintf("%08x", (double)$ban['hdid']);
-	$ban['hdid_str'] = strtoupper(substr($ban['hdid_str'],0,4).'-'.substr($ban['hdid_str'],4,4));
-	$ban['hdid_str'] = $ban['hdid']===null?'-':$ban['hdid_str'];
-	if ($ban['expires'] == -1)
+
+	if (!is_null($ban['hdid']))
+	{
+		$ban['hdid_str'] = sprintf("%08x", (double)$ban['hdid']);
+		$ban['hdid_str'] = strtoupper(substr($ban['hdid_str'],0,4).'-'.substr($ban['hdid_str'],4,4));
+		$ban['hdid_str'] = webcp_encrypt_hdid($ban['hdid_str']);
+	}
+	else
+	{
+		$ban['hdid_str'] = '-';
+	}
+
+	if ($ban['expires'] <= 0)
 	{
 		$ban['remaining'] = '<b>Permanent</b>';
 	}
