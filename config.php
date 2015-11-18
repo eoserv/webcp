@@ -58,6 +58,12 @@ $dynamiccsrf = false;
 // Leaving it unset will display only when there are less than 10,000 characters
 //$showbankgold = false;
 
+// Optional path to a key file to use for encrypting player information
+// Should contain a number of random bytes (54 bytes) and not be made available via web
+// A key will be automatically generated if the file is present but empty
+// If not used, player IP addresses, computer names and HDIDs will be shown to all admins
+//$ipcrypt = '/home/www-user/webcp-ipcrypt.key';
+
 // Print debug info at the bottom of the page (never use this on live servers)
 $DEBUG = false;
 

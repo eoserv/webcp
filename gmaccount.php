@@ -34,9 +34,13 @@ if (empty($account[0]))
 }
 $account = $account[0];
 
-
+$account['regip'] = webcp_encrypt_ip($account['regip']);
+$account['lastip'] = webcp_encrypt_ip($account['lastip']);
 $account['hdid_str'] = sprintf("%08x", (double)$account['hdid']);
 $account['hdid_str'] = strtoupper(substr($account['hdid_str'],0,4).'-'.substr($account['hdid_str'],4,4));
+$account['hdid_str'] = webcp_encrypt_hdid($account['hdid_str']);
+$account['computer'] = webcp_encrypt_computer($account['computer']);
+$account['computer_str'] = webcp_trunc($account['computer'], 15);
 $account['created_str'] = date('r', $account['created']);
 $account['lastused_str'] = date('r', $account['lastused']);
 
