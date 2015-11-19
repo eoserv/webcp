@@ -1,5 +1,7 @@
 <?php
 
+define('ZERO_IV', "\x0\x0\x0\x0\x0\x0\x0\x0");
+
 function get_ipcrypt_key($ipcrypt)
 {
 	if (!function_exists('openssl_encrypt'))
@@ -46,9 +48,9 @@ function webcp_encrypt_ip($ip)
 	if (strlen($ipbytes) >= 8)
 		$ipbytes = substr($ipbytes, 0, 8);
 
-	$cyphertext = openssl_encrypt($ipbytes, 'blowfish', $ipcrypt, 0, "\x0\x0\x0\x0\x0\x0\x0\x0");
+	$cyphertext = openssl_encrypt($ipbytes, 'blowfish', $ipcrypt, OPENSSL_RAW_DATA, ZERO_IV);
 
-	return 'ip_' . base64_encode($cyphertext);
+	return 'ip_' . rtrim(base64_encode($cyphertext), '=');
 }
 
 function webcp_encrypt_hdid($hdid)
@@ -85,9 +87,9 @@ function webcp_encrypt_hdid($hdid)
 	if (strlen($ipbytes) >= 4)
 		$ipbytes = substr($ipbytes, 0, 4);
 
-	$cyphertext = openssl_encrypt($ipbytes, 'blowfish', $ipcrypt, 0, "\x0\x0\x0\x0\x0\x0\x0\x0");
+	$cyphertext = openssl_encrypt($ipbytes, 'blowfish', $ipcrypt, OPENSSL_RAW_DATA, ZERO_IV);
 
-	return 'hd_' . base64_encode($cyphertext);
+	return 'hd_' . rtrim(base64_encode($cyphertext), '=');
 }
 
 function webcp_encrypt_computer($computer)
@@ -102,14 +104,14 @@ function webcp_encrypt_computer($computer)
 
 	$ipbytes = $computer;
 
-	if (strlen($ipbytes) >= 16)
-		$ipbytes = substr($ipbytes, 0, 16);
+	if (strlen($ipbytes) >= 15)
+		$ipbytes = substr($ipbytes, 0, 15);
 	else
-		$ipbytes = $ipbytes . str_repeat(' ', 16 - strlen($ipbytes));
+		$ipbytes = $ipbytes . str_repeat(' ', 15 - strlen($ipbytes));
 
-	$cyphertext = openssl_encrypt($ipbytes, 'blowfish', $ipcrypt, 0, "\x0\x0\x0\x0\x0\x0\x0\x0");
+	$cyphertext = openssl_encrypt($ipbytes, 'blowfish', $ipcrypt, OPENSSL_RAW_DATA, ZERO_IV);
 
-	return 'pc_' . substr(base64_encode($cyphertext), 0, -1);
+	return 'pc_' . rtrim(base64_encode($cyphertext), '=');
 }
 
 function webcp_decrypt_ip($ip)
@@ -124,18 +126,18 @@ function webcp_decrypt_ip($ip)
 
 	if (substr($ip, 0, 3) == 'ip_')
 	{
-		if (strlen($ip) == 19 && strlen(base64_decode(substr($ip, 3))) == 12)
+		if (strlen($ip) == 14 && strlen(base64_decode(substr($ip, 3))) == 8)
 		{
-			$plaintext = openssl_decrypt(base64_decode(substr($ip, 3)), 'blowfish', $ipcrypt, 0, "\x0\x0\x0\x0\x0\x0\x0\x0");
+			$plaintext = openssl_decrypt(base64_decode(substr($ip, 3)), 'blowfish', $ipcrypt, OPENSSL_RAW_DATA, ZERO_IV);
 
 			if ($plaintext === false || strlen($plaintext) == 0)
 				return 'IPBAD';
 
 			return long2ip(unpack('N', $plaintext)[1]);
 		}
-		else if (strlen($ip) == 35 && strlen(base64_decode(substr($ip, 3))) == 24)
+		else if (strlen($ip) == 25 && strlen(base64_decode(substr($ip, 3))) == 16)
 		{
-			$plaintext = openssl_decrypt(base64_decode(substr($ip, 3)), 'blowfish', $ipcrypt, 0, "\x0\x0\x0\x0\x0\x0\x0\x0");
+			$plaintext = openssl_decrypt(base64_decode(substr($ip, 3)), 'blowfish', $ipcrypt, OPENSSL_RAW_DATA, ZERO_IV);
 
 			if ($plaintext === false || strlen($plaintext) == 0)
 				return 'IPBAD';
@@ -159,9 +161,9 @@ function webcp_decrypt_hdid($ip)
 
 	if (substr($ip, 0, 3) == 'hd_')
 	{
-		if (strlen($ip) == 19 && strlen(base64_decode(substr($ip, 3))) == 12)
+		if (strlen($ip) == 14 && strlen(base64_decode(substr($ip, 3))) == 8)
 		{
-			$plaintext = openssl_decrypt(base64_decode(substr($ip, 3)), 'blowfish', $ipcrypt, 0, "\x0\x0\x0\x0\x0\x0\x0\x0");
+			$plaintext = openssl_decrypt(base64_decode(substr($ip, 3)), 'blowfish', $ipcrypt, OPENSSL_RAW_DATA, ZERO_IV);
 
 			if ($plaintext === false || strlen($plaintext) == 0)
 				return 'HDIDBAD';
@@ -187,9 +189,9 @@ function webcp_decrypt_computer($ip)
 
 	if (substr($ip, 0, 3) == 'pc_')
 	{
-		if (strlen($ip) == 46 && strlen(base64_decode(substr($ip, 3) . '=')) == 32)
+		if (strlen($ip) == 25 && strlen(base64_decode(substr($ip, 3))) == 16)
 		{
-			$plaintext = openssl_decrypt(base64_decode(substr($ip, 3) . '='), 'blowfish', $ipcrypt, 0, "\x0\x0\x0\x0\x0\x0\x0\x0");
+			$plaintext = openssl_decrypt(base64_decode(substr($ip, 3)), 'blowfish', $ipcrypt, OPENSSL_RAW_DATA, ZERO_IV);
 
 			if ($plaintext === false || strlen($plaintext) == 0)
 				return 'COMPUTERBAD';
