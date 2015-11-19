@@ -1,8 +1,10 @@
 <?php
 /* This script is free to modify and distribute
 
-Current version: 1.5
+Current version: 1.6
 
+Updated 19th November 2015 (tehsausage@gmail.com) [1.6]
+	Added <[%foo]> for urlencoded output
 Updated 13th September 2014 (tehsausage@gmail.com) [1.5]
 	Default printing behaviour is to escape HTML entities.
 	<[~foo]> behaves identially to <[foo]> for backwards compatability.
@@ -40,6 +42,7 @@ class Template{
 	const T_SPACE = ' ';
 	const T_NOT = '!';
 	const T_HTMLENTITIES = '~';
+	const T_URLENCODE = '%';
 	const T_NOESCAPE = '#';
 	const T_ISARRAY = '@';
 	const T_IF = 'if';
@@ -145,6 +148,7 @@ class Template{
 		$ndoffset = 0;
 		$inloop = 0;
 		$htmlentities = true;
+		$urlencode = false;
 		while ($done == false){
 			switch ($state){
 				case 0:
@@ -176,6 +180,8 @@ class Template{
 							$quoted = !$quoted;
 						elseif ($i == Template::T_NOESCAPE)
 							$htmlentities = false;
+						elseif ($i == Template::T_URLENCODE)
+							$urlencode = true;
 						elseif ($i == Template::T_SPLIT)
 							$pt2++;
 						elseif ($i == Template::T_SPACE && !$quoted){
@@ -262,11 +268,14 @@ class Template{
 						$inloop++;
 					} else {
 						if (strpos($newi[0],Template::T_ARRAY) === false){
-							if ($htmlentities)
+							if ($urlencode)
+								$code = "<?php echo htmlspecialchars(urlencode(isset(\$".Template::Secure($newi[0]).")?\$".Template::Secure($newi[0]).":'".(isset($newi[1])?Template::Secure($newi[1],true):'')."'),ENT_QUOTES,'UTF-8') ?>";
+							else if ($htmlentities)
 								$code = "<?php echo htmlspecialchars(isset(\$".Template::Secure($newi[0]).")?\$".Template::Secure($newi[0]).":'".(isset($newi[1])?Template::Secure($newi[1],true):'')."',ENT_QUOTES,'UTF-8') ?>";
 							else
 								$code = "<?php echo (isset(\$".Template::Secure($newi[0]).")?\$".Template::Secure($newi[0]).":'".(isset($newi[1])?Template::Secure($newi[1],true):'')."') ?>";
 							$htmlentities = true;
+							$urlencode = false;
 						} else {
 							$exa = explode(Template::T_ARRAY,$newi[0]);
 							$finalv = Template::Secure(array_shift($exa));
@@ -276,11 +285,14 @@ class Template{
 								else
 									$finalv.="['".Template::Secure($key,true)."']";
 							}
-							if ($htmlentities)
+							if ($urlencode)
+								$code = "<?php echo htmlspecialchars(urlencode(isset(\${$finalv})?\${$finalv}:'".(isset($newi[1])?Template::Secure($newi[1],true):'')."'),ENT_QUOTES,'UTF-8') ?>";
+							else if ($htmlentities)
 								$code = "<?php echo htmlspecialchars(isset(\${$finalv})?\${$finalv}:'".(isset($newi[1])?Template::Secure($newi[1],true):'')."',ENT_QUOTES,'UTF-8') ?>";
 							else
 								$code = "<?php echo (isset(\${$finalv})?\${$finalv}:'".(isset($newi[1])?Template::Secure($newi[1],true):'')."') ?>";							
 							$htmlentities = true;
+							$urlencode = false;
 						}
 					}
 					$code;

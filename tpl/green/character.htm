@@ -1,14 +1,7 @@
-<[if GM]>
-<!--
-<ul class="gmoptions">
-	<li><a href="./editcharacter<[php]>?name=<[character.name]>">Edit Character</a>
-</ul>
--->
-<[endif]>
 
 <table id="character">
 	<thead>
-		<tr><th colspan="3"><[~character.name]><[if GM]> <a href="./gmaccount<[php]>?name=<[~character.account]>">(<[~character.account]>)</a><[endif]>
+		<tr><th colspan="3"><[character.name]><[if GM]> <a href="./gmaccount<[php]>?name=<[%character.account]>">(<[character.account]>)</a><[endif]>
 	<tbody>
 		<tr><th>Level<td colspan="2"><[character.level]>
 
@@ -17,9 +10,9 @@
 		<tr><th>Admin Rank<td colspan="2"><[character.admin_str]>
 
 <[if character.guild]>
-		<tr><th rowspan="3">Guild<th>Tag<td><[~character.guild]>
+		<tr><th rowspan="3">Guild<th>Tag<td><[character.guild]>
 
-		<tr><th>Name<td><a href="./guild<[php]>?tag=<[~character.guild]>"><[~character.guild_name]></a>
+		<tr><th>Name<td><a href="./guild<[php]>?tag=<[%character.guild]>"><[character.guild_name]></a>
 		<tr><th>Rank<td><[character.guild_rank_str]> (<[character.guild_rank]>)
 <[else]>
 		<tr><th>Guild<td colspan="2"><i>Not in guild</i>
@@ -30,15 +23,15 @@
 
 		<tr><th>Class<td colspan="2"><[character.class_str]>
 
-		<tr><th>Title<td colspan="2"><[~character.title]>
+		<tr><th>Title<td colspan="2"><[character.title]>
 
-		<tr><th>Partner<td colspan="2"><[if GM]><a href="./character<[php]>?name=<[~character.partner]>"><[endif]><[~character.partner]><[if GM]></a><[endif]>
+		<tr><th>Partner<td colspan="2"><[if GM]><a href="./character<[php]>?name=<[%character.partner]>"><[endif]><[character.partner]><[if GM]></a><[endif]>
 
 		<tr><th rowspan="2">Hair<th>Style<td><[character.hairstyle]>
 
 		<tr><th>Color<td><[character.haircolor_str]>
 
-		<tr><th rowspan="4">Home<th>Name<td><[~character.home]>
+		<tr><th rowspan="4">Home<th>Name<td><[character.home]>
 
 		<tr><th>Map<td><[character.spawnmap]>
 

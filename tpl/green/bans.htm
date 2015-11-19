@@ -18,15 +18,15 @@
 	<tbody>
 <[foreach bans ban]>
 		<tr>
-			<td><[if !ban.nouser]><a href="./gmaccount<[php]>?name=<[~ban.username]>"><[endif]><[~ban.username]><[if !ban.nouser]></a><[endif]>
+			<td><[if !ban.nouser]><a href="./gmaccount<[php]>?name=<[%ban.username]>"><[endif]><[ban.username]><[if !ban.nouser]></a><[endif]>
 
-			<td><[if !ban.noip]><a href="search<[php]>?searchtype=account&ip=<[ban.ip_str]>"><[endif]><[~ban.ip_str]><[if !ban.noip]></a><[endif]>
+			<td><[if !ban.noip]><a href="search<[php]>?searchtype=account&amp;ip=<[%ban.ip_str]>"><[endif]><[ban.ip_str]><[if !ban.noip]></a><[endif]>
 
-			<td><[if !ban.nohdid]><a href="search<[php]>?searchtype=account&hdid=<[ban.hdid_str]>"><[endif]><[~ban.hdid_str]><[if !ban.nohdid]></a><[endif]>
+			<td><[if !ban.nohdid]><a href="search<[php]>?searchtype=account&amp;hdid=<[%ban.hdid_str]>"><[endif]><[ban.hdid_str]><[if !ban.nohdid]></a><[endif]>
 
 			<td><[#ban.remaining]>
 
-			<td><a href="./character<[php]>?name=<[~ban.setter]>"><[~ban.setter]></a>
+			<td><a href="./character<[php]>?name=<[%ban.setter]>"><[ban.setter]></a>
 
 <[endforeach]>
 </table>

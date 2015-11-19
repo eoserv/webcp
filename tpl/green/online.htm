@@ -8,11 +8,11 @@
 	<tbody>
 <[foreach characters char]>
 		<tr>
-			<td><[if GM]><a href="./character<[php]>?name=<[~char.name]>"><[endif]><[~char.name]><[if GM]></a><[endif]><[if char.gm]> <img src="./tpl/green/images/admin.gif"><[endif]>
+			<td><[if GM]><a href="./character<[php]>?name=<[%char.name]>"><[endif]><[char.name]><[if GM]></a><[endif]><[if char.gm]> <img src="./tpl/green/images/admin.gif"><[endif]>
 
-			<td><[~char.title]>
+			<td><[char.title]>
 
-			<td><a href="./guild<[php]>?tag=<[~char.guild]>"><[~char.guild]></a>
+			<td><a href="./guild<[php]>?tag=<[%char.guild]>"><[char.guild]></a>
 
 <[endforeach]>
 </table>
