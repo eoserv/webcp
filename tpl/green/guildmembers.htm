@@ -1,6 +1,6 @@
 <div class="jumppage">
 <form action="" method="GET">
-<input type="hidden" name="tag" value="<[~_GET.tag]>">
+<input type="hidden" name="tag" value="<[_GET.tag]>">
 <label for="page">Page:</label> <input type="text" name="page" id="page" value="<[page]>" size="3">/<[pages]> <input type="submit" value="Go">
 </form>
 </div>
@@ -18,7 +18,7 @@
 	<tbody>
 <[foreach members char]>
 		<tr>
-			<td><[if GM]><a href="./character<[php]>?name=<[~char.name]>"><[endif]><[~char.name]><[if GM]></a><[endif]><[if char.gm]> <img src="./tpl/green/images/admin.gif"><[endif]>
+			<td><[if GM]><a href="./character<[php]>?name=<[%char.name]>"><[endif]><[char.name]><[if GM]></a><[endif]><[if char.gm]> <img src="./tpl/green/images/admin.gif"><[endif]>
 
 			<td><[char.level]>
 

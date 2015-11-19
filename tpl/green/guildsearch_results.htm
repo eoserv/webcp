@@ -2,8 +2,8 @@
 <div class="jumppage">
 <form action="" method="GET">
 <input type="hidden" name="searchtype" value="guild">
-<input type="hidden" name="tag" value="<[~_GET.tag]>">
-<input type="hidden" name="name" value="<[~_GET.name]>">
+<input type="hidden" name="tag" value="<[_GET.tag]>">
+<input type="hidden" name="name" value="<[_GET.name]>">
 <label for="page">Page:</label> <input type="text" name="page" id="page" value="<[page]>" size="3">/<[pages]> <input type="submit" value="Go">
 </form>
 </div>
@@ -21,9 +21,9 @@
 	<tbody>
 <[foreach guilds guild]>
 		<tr>
-			<td><[~guild.tag]>
+			<td><[guild.tag]>
 
-			<td><a href="./guild<[php]>?tag=<[~guild.tag]>"><[~guild.name]></a>
+			<td><a href="./guild<[php]>?tag=<[%guild.tag]>"><[guild.name]></a>
 
 			<td><[guild.members]>
 

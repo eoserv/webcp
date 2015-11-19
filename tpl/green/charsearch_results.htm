@@ -2,7 +2,7 @@
 <div class="jumppage">
 <form action="" method="GET">
 <input type="hidden" name="searchtype" value="character">
-<input type="hidden" name="name" value="<[~_GET.name]>">
+<input type="hidden" name="name" value="<[_GET.name]>">
 <label for="page">Page:</label> <input type="text" name="page" id="page" value="<[page]>" size="3">/<[pages]> <input type="submit" value="Go">
 </form>
 </div>
@@ -21,9 +21,9 @@
 <[foreach characters char]>
 	<tbody>
 		<tr>
-			<td><a href="./character<[php]>?name=<[~char.name]>"><[~char.name]></a><[if char.gm]> <img src="./tpl/green/images/admin.gif"><[endif]>
+			<td><a href="./character<[php]>?name=<[%char.name]>"><[char.name]></a><[if char.gm]> <img src="./tpl/green/images/admin.gif"><[endif]>
 
-			<td><a href="./gmaccount<[php]>?name=<[~char.account]>"><[~char.account]></a>
+			<td><a href="./gmaccount<[php]>?name=<[%char.account]>"><[char.account]></a>
 
 			<td><[char.level]>
 

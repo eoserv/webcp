@@ -1,30 +1,22 @@
-<[if HGM]>
-<!--
-<ul class="gmoptions hgmoptions">
-	<li><a href="./editaccount<[php]>?name=<[account.username]>">Edit Account</a>
-</ul>
--->
-<[endif]>
-
 <table id="account">
 	<thead>
 		<tr>
-			<th colspan="2"><[~account.username]>
+			<th colspan="2"><[account.username]>
 
 	<tbody>
-		<tr><th>Computer Name<td><a href="search<[php]>?searchtype=account&computer=<[~account.computer]>"><[~account.computer_str]></a>
+		<tr><th>Computer Name<td><a href="search<[php]>?searchtype=account&amp;computer=<[%account.computer]>"><[account.computer_str]></a>
 
-		<tr><th>HDID<td><a href="search<[php]>?searchtype=account&hdid=<[account.hdid_str]>"><[account.hdid_str]></a>
+		<tr><th>HDID<td><a href="search<[php]>?searchtype=account&amp;hdid=<[%account.hdid_str]>"><[account.hdid_str]></a>
 
-		<tr><th>Registered<td><[account.created_str]> (<a href="search<[php]>?searchtype=account&ip=<[account.regip]>"><[account.regip]></a>)
+		<tr><th>Registered<td><[account.created_str]> (<a href="search<[php]>?searchtype=account&amp;ip=<[%account.regip]>"><[account.regip]></a>)
 
-		<tr><th>Last Used<td><[if account.lastused]><[account.lastused_str]> (<a href="search<[php]>?searchtype=account&ip=<[account.lastip]>"><[account.lastip]>)</a><[else]><i>Never</i><[endif]>
+		<tr><th>Last Used<td><[if account.lastused]><[account.lastused_str]> (<a href="search<[php]>?searchtype=account&amp;ip=<[%account.lastip]>"><[account.lastip]>)</a><[else]><i>Never</i><[endif]>
 
-		<tr><th>Full Name<td><[~account.fullname]>
+		<tr><th>Full Name<td><[account.fullname]>
 
-		<tr><th>Location<td><[~account.location]>
+		<tr><th>Location<td><[account.location]>
 
-		<tr><th>E-Mail<td><[~account.email]>
+		<tr><th>E-Mail<td><[account.email]>
 
 </table>
 
@@ -42,9 +34,9 @@
 	<tbody>
 <[foreach characters char]>
 		<tr>
-			<td><a href="./character<[php]>?name=<[~char.name]>"><[~char.name]></a><[if char.gm]> <img src="./tpl/green/images/admin.gif"><[endif]>
+			<td><a href="./character<[php]>?name=<[%char.name]>"><[char.name]></a><[if char.gm]> <img src="./tpl/green/images/admin.gif"><[endif]>
 
-			<td><[~char.title]>
+			<td><[char.title]>
 
 			<td><[char.gender]>
 

@@ -18,13 +18,13 @@
 	<tbody>
 <[foreach reports report]>
 		<tr>
-			<td><a href="./character<[php]>?name=<[~report.reporter]>"><[~report.reporter]></a>
+			<td><a href="./character<[php]>?name=<[%report.reporter]>"><[report.reporter]></a>
 
-			<td><a href="./character<[php]>?name=<[~report.reported]>"><[~report.reported]></a>
+			<td><a href="./character<[php]>?name=<[%report.reported]>"><[report.reported]></a>
 
-			<td><[~report.reason]>
+			<td><[report.reason]>
 
-			<td><a href="./report_log<[php]>?reporter=<[~report.reporter]>&reported=<[~report.reported]>&time=<[report.time]>">(view log)</a>
+			<td><a href="./report_log<[php]>?reporter=<[%report.reporter]>&amp;reported=<[%report.reported]>&amp;time=<[%report.time]>">(view log)</a>
 
 			<td><[report.time_ago]>
 

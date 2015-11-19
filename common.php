@@ -161,7 +161,7 @@ try
 			break;
 	
 		case 'mysql':
-			$dsn = "mysql:host=" . $dbhost . ';charset=ISO-8859-1';
+			$dsn = "mysql:host=" . $dbhost;
 
 			if (isset($dbport))
 				$dsn .= ";port=" . $dbport;
