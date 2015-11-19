@@ -12,13 +12,13 @@
 			<th colspan="2"><[~account.username]>
 
 	<tbody>
-		<tr><th>Computer Name<td><a href="search<[php]>?searchtype=account&computer=<[~account.computer]>&csrf=<[csrf]>"><[~account.computer_str]></a>
+		<tr><th>Computer Name<td><a href="search<[php]>?searchtype=account&computer=<[~account.computer]>"><[~account.computer_str]></a>
 
-		<tr><th>HDID<td><a href="search<[php]>?searchtype=account&hdid=<[account.hdid_str]>&csrf=<[csrf]>"><[account.hdid_str]></a>
+		<tr><th>HDID<td><a href="search<[php]>?searchtype=account&hdid=<[account.hdid_str]>"><[account.hdid_str]></a>
 
-		<tr><th>Registered<td><[account.created_str]> (<a href="search<[php]>?searchtype=account&ip=<[account.regip]>&csrf=<[csrf]>"><[account.regip]></a>)
+		<tr><th>Registered<td><[account.created_str]> (<a href="search<[php]>?searchtype=account&ip=<[account.regip]>"><[account.regip]></a>)
 
-		<tr><th>Last Used<td><[if account.lastused]><[account.lastused_str]> (<a href="search<[php]>?searchtype=account&ip=<[account.lastip]>&csrf=<[csrf]>"><[account.lastip]>)</a><[else]><i>Never</i><[endif]>
+		<tr><th>Last Used<td><[if account.lastused]><[account.lastused_str]> (<a href="search<[php]>?searchtype=account&ip=<[account.lastip]>"><[account.lastip]>)</a><[else]><i>Never</i><[endif]>
 
 		<tr><th>Full Name<td><[~account.fullname]>
 
