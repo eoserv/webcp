@@ -98,7 +98,7 @@ function webcp_encrypt_computer($computer)
 	global $ipcrypt_key;
 
 	if (empty($ipcrypt))
-		return $hdid;
+		return $computer;
 
 	$ipcrypt_key = get_ipcrypt_key($ipcrypt);
 
