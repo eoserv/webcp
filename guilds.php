@@ -16,6 +16,8 @@ if (empty($guilds))
 
 foreach ($guilds as &$guild)
 {
+	$guild['tag'] = trim(strtoupper($guild['tag']));
+	$guild['name'] = ucfirst($guild['name']);
 	$guild['exp'] = number_format($guild['exp']);
 	$guild['members'] = number_format($guild['members']);
 }
