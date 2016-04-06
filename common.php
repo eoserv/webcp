@@ -562,7 +562,7 @@ if (isset($_REQUEST['action']))
 						$password = seose_str_hash($password, $seose_compat_key);
 
 					$password = hash('sha256',$salt.strtolower($_POST['username']).$password);
-					$checklogin = webcp_db_fetchall("SELECT username FROM accounts WHERE username = ? AND password = ?", strtolower($_POST['username']), $password);
+					$checklogin = webcp_db_fetchall("SELECT username, password FROM accounts WHERE username = ? AND password = ?", strtolower($_POST['username']), $password);
 					if (empty($checklogin))
 					{
 						$loginrate_result = $loginrate->Mark($ip_prefix);
@@ -572,6 +572,7 @@ if (isset($_REQUEST['action']))
 					else
 					{
 						$sess->username = $checklogin[0]['username'];
+						$sess->password = $checklogin[0]['password'];
 						$tpl->message = "Logged in.";
 					}
 				}
@@ -623,11 +624,18 @@ if (isset($_REQUEST['action']))
 $tpl->logged = $logged = isset($sess->username);
 $tpl->username = $sess->username;
 
-$userdata = webcp_db_fetchall("SELECT * FROM accounts WHERE username = ? LIMIT 1", $sess->username);
+if (isset($sess->username, $sess->password))
+	$userdata = webcp_db_fetchall("SELECT * FROM accounts WHERE username = ? AND password = ? LIMIT 1", $sess->username, $sess->password);
+else
+	$userdata = array();
 
 if ($logged && empty($userdata))
 {
-	$tpl->message = "Your account has been deleted, logging out...";
+	if (isset($sess->password))
+		$tpl->message = "Your account has been deleted or changed password, logging out...";
+	else
+		$tpl->message = "Session expired, logging out...";
+
 	$tpl->logged = $logged = false;
 }
 
