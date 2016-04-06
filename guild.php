@@ -11,7 +11,7 @@ if (empty($_GET['tag']))
 	exit;
 }
 
-$guild = webcp_db_fetchall("SELECT * FROM guilds WHERE tag = ?", strtoupper($_GET['tag']));
+$guild = webcp_db_fetchall("SELECT *, (SELECT COUNT(1) FROM characters c WHERE c.guild = g.tag) AS members, (SELECT SUM(`exp`) FROM characters c WHERE c.guild = g.tag) AS `exp` FROM guilds g WHERE tag = ?", strtoupper($_GET['tag']));
 if (empty($guild[0]))
 {
 	$tpl->message = 'Guild does not exist.';
@@ -20,21 +20,17 @@ if (empty($guild[0]))
 }
 $guild = $guild[0];
 
-$members = webcp_db_fetchall("SELECT COUNT(1) as count FROM characters WHERE guild = ?", strtoupper($_GET['tag']));
-
 $guild['created_str'] = date('r', $guild['created']);
 $guild['name'] = ucfirst($guild['name']);
 $guild['bank'] = number_format($guild['bank']);
-$guild['members'] = number_format($members[0]['count']);
+$guild['members'] = number_format($guild['members']);
+$guild['exp'] = number_format($guild['exp']);
 $guild['ranks'] = array_slice(explode(',', $guild['ranks']), 0, 9);
 
 foreach ($guild['ranks'] as $k => $rank)
 {
 	$guild['ranks'][$k] = array($k+1, $rank);
 }
-
-$totalexp = webcp_db_fetchall("SELECT SUM(exp) as totalexp FROM characters WHERE guild = ? AND admin = 0", $guild['tag']);
-$guild['exp'] = number_format($totalexp[0]['totalexp']);
 
 $tpl->guild = $guild;
 

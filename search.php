@@ -254,16 +254,14 @@ if (!empty($_GET['searchtype']))
 					return;
 				}
 				
-				$guilds = webcp_db_fetchall("SELECT * FROM guilds WHERE tag LIKE ? AND name LIKE ? LIMIT ?,?", $tag, $name, $start, $perpage);
+				$guilds = webcp_db_fetchall("SELECT tag, name, (SELECT COUNT(1) FROM characters c WHERE c.guild = g.tag) AS members, (SELECT SUM(`exp`) FROM characters c WHERE c.guild = g.tag) AS `exp` FROM guilds g WHERE tag LIKE ? AND name LIKE ? LIMIT ?,?", $tag, $name, $start, $perpage);
 
 				foreach ($guilds as &$guild)
 				{
-					$membercount = webcp_db_fetchall("SELECT COUNT(1) as count FROM characters WHERE guild = ?", $guild['tag']);
-					$totalexp = webcp_db_fetchall("SELECT SUM(exp) as totalexp FROM characters WHERE guild = ? AND admin = 0", $guild['tag']);
 					$guild['tag'] = trim(strtoupper($guild['tag']));
 					$guild['name'] = ucfirst($guild['name']);
-					$guild['members'] = number_format($membercount[0]['count']);
-					$guild['exp'] = number_format($totalexp[0]['totalexp']);
+					$guild['members'] = number_format($guild['members']);
+					$guild['exp'] = number_format($guild['exp']);
 				}
 				unset($guild);
 
