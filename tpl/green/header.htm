@@ -86,6 +86,12 @@ EOSERV Control Panel
 <input type="text" name="username" id="username">
 <label for="password">Password</label>
 <input type="password" name="password" id="password">
+<[if login_need_captcha]>
+<label for="captcha">CAPTCHA</label>
+<p>You have entered too many invalid passwords. Please enter the letters shown in the image.</p>
+<img src="./captcha<[php]>">
+<input type="text" name="captcha" id="captcha">
+<[endif]>
 <input type="submit" id="submit" value="Login">
 </form>
 </div>

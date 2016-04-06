@@ -250,6 +250,31 @@ function webcp_db_fetchall($sql/*, $params...*/)
 $tpl = new Template('tpl/'.$template, true);
 $sess = new Session($cpid.'_EOSERVCP');
 
+require 'class/LoginRate.class.php';
+
+switch ($loginrate_driver)
+{
+	case 'none':
+		require 'class/LoginRate_none.class.php';
+		$loginrate_driver = new LoginRate_none();
+		break;
+
+	case 'file':
+		require 'class/LoginRate_file.class.php';
+		$loginrate_driver = new LoginRate_file($loginrate_file_path, $loginrate_file_salt);
+		break;
+
+	case 'db':
+		require 'class/LoginRate_db.class.php';
+		$loginrate_driver = new LoginRate_db($loginrate_db_table);
+		break;
+
+	default:
+		exit("Invalid LoginRate driver specified");
+}
+
+$loginrate = new LoginRate($loginrate_driver, $loginrate, $loginrate_captcha);
+
 $tpl->pagetitle = $pagetitle;
 $tpl->sitename = $sitename;
 $tpl->homeurl = $homeurl;
@@ -507,22 +532,88 @@ if (isset($_REQUEST['action']))
 		case 'login':
 			if (isset($_POST['username'], $_POST['password']))
 			{
-				$password = substr($_POST['password'], 0, 12);
+				$ip_prefix = loginrate_ip_prefix($_SERVER['REMOTE_ADDR']);
+				$captcha_solved = false;
+				$captcha_attempted = false;
 
-				if ($seose_compat)
-					$password = seose_str_hash($password, $seose_compat_key);
-
-				$password = hash('sha256',$salt.strtolower($_POST['username']).$password);
-				$checklogin = webcp_db_fetchall("SELECT username FROM accounts WHERE username = ? AND password = ?", strtolower($_POST['username']), $password);
-				if (empty($checklogin))
+				if (isset($_POST['captcha'], $sess->captcha))
 				{
-					$tpl->message = "Login failed.";
-					break;
+					$captcha_attempted = true;
+
+					if (strtolower($_POST['captcha']) === strtolower($sess->captcha))
+					{
+						$captcha_solved = true;
+					}
+					else
+					{
+						$tpl->login_need_captcha = true;
+						$tpl->message = "The CAPTCHA entered did not match. Please try again.";
+						$loginrate_result = $loginrate->Mark($ip_prefix);
+					}
 				}
-				else
+
+				$loginrate_result = $loginrate->Check($ip_prefix, $captcha_solved);
+
+				if ($loginrate_result[0] == LOGINRATE_CHECK_OK)
 				{
-					$sess->username = $checklogin[0]['username'];
-					$tpl->message = "Logged in.";
+					$password = substr($_POST['password'], 0, 12);
+
+					if ($seose_compat)
+						$password = seose_str_hash($password, $seose_compat_key);
+
+					$password = hash('sha256',$salt.strtolower($_POST['username']).$password);
+					$checklogin = webcp_db_fetchall("SELECT username FROM accounts WHERE username = ? AND password = ?", strtolower($_POST['username']), $password);
+					if (empty($checklogin))
+					{
+						$loginrate_result = $loginrate->Mark($ip_prefix);
+						$tpl->message = "Login failed.";
+						break;
+					}
+					else
+					{
+						$sess->username = $checklogin[0]['username'];
+						$tpl->message = "Logged in.";
+					}
+				}
+				else if ($loginrate_result[0] == LOGINRATE_CHECK_THROTTLED)
+				{
+					$delta = $loginrate_result[1];
+
+					if (!$captcha_attempted || $captcha_solved)
+					{
+						$message = 'Too many failed login attempts. Please try again';
+					}
+					else
+					{
+						$message = 'The CAPTCHA entered did not match.<br>Too many failed login attempts. Please try again';
+						$tpl->login_need_captcha = false;
+					}
+
+					if ($delta <= 60)
+					{
+						$message .= ' in one minute.';
+					}
+					else if ($delta <= 300)
+					{
+						$message .= ' in 5 minutes.';
+					}
+					else if ($delta <= 3600)
+					{
+						$message .= ' in one hour.';
+					}
+					else
+					{
+						$message .= ' tomorrow.';
+					}
+
+					$tpl->message = $message;
+				}
+				else if ($loginrate_result[0] == LOGINRATE_CHECK_NEED_CAPTCHA)
+				{
+					$tpl->login_need_captcha = true;
+
+					if (!$captcha_attempted)
+						$tpl->message = 'Too many failed login attempts. Please solve a CAPTCHA.';
 				}
 			}
 			break;

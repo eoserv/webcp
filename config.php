@@ -53,6 +53,42 @@ $pubcache = true;
 // Turning this on will cause HTTP 400 errors if you refresh a form, but provides a little more security
 $dynamiccsrf = false;
 
+// Rate-limits authentication requests by IP address
+// Driver can either be 'none', 'file' or 'db'
+// DB driver requires an additional table added to the database (see install.sql)
+//$loginrate_driver = 'none';
+$loginrate_driver = 'file';
+//$loginrate_driver = 'db';
+
+// File path for loginrate 'file' driver, requires a trailing slash
+// For privacy reasons this path shouldn't be accessible via your webserver
+$loginrate_file_path = './.htloginrate/';
+
+// Filename salt for loginrate 'file' driver
+// This should be changed to something random
+$loginrate_file_salt = 'ChangeMe';
+
+// Database table for loginrate 'db' driver
+$loginrate_db_table = 'webcp_loginrate';
+
+//   Require a CAPTCHA after:
+//    - more than 5 requests in an hour
+//    - or, more than 20 requests in a day
+//   Make blank to disable.
+$loginrate_captcha = '5:3600; 20:86400';
+//   Rejects requests after:
+//    - more than 2 requests in 10 seconds
+//    - or, more than 10 requests in 5 minutes
+//    - or, more than 100 requests in 24 hours
+$loginrate = '2:10; 10:300; 100:86400';
+
+// List of fonts to use for CAPTCHA generation
+// Leave blank to use PHP's basic pixel font instead.
+$captcha_fonts = array(
+	'/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',
+	'/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf',
+);
+
 // Setting this to false will disable the display the sum of bank gold on the front page
 // Setting this to true will always display the sum of bank gold on the front page
 // Leaving it unset will display only when there are less than 10,000 characters
