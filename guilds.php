@@ -1,16 +1,11 @@
 <?php
 
-function sort_exp($a, $b)
-{
-	return $a['exp'] < $b['exp'];
-}
-
 $pagetitle = 'Top Guilds';
 
 require 'common.php';
 
 $tpl->limit = $topguilds;
-$guilds = webcp_db_fetchall("SELECT tag, name, (SELECT COUNT(1) FROM characters c WHERE c.guild = g.tag) AS members, (SELECT SUM(`exp`) FROM characters c WHERE c.guild = g.tag) AS `exp` FROM guilds g");
+$guilds = webcp_db_fetchall("SELECT tag, name, (SELECT COUNT(1) FROM characters c WHERE c.guild = g.tag) AS members, (SELECT SUM(`exp`) FROM characters c WHERE c.guild = g.tag) AS `exp` FROM guilds g ORDER BY `exp` DESC LIMIT ?", $topguilds);
 
 if (empty($guilds))
 {
@@ -18,10 +13,6 @@ if (empty($guilds))
 	$tpl->Execute(null);
 	exit;
 }
-
-usort($guilds, 'sort_exp');
-
-$guilds = array_slice($guilds, 0, $topguilds);
 
 foreach ($guilds as &$guild)
 {
