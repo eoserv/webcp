@@ -86,12 +86,12 @@ class LoginRate
 		if (isset($this->cache[$ip_prefix]))
 			return $this->cache[$ip_prefix];
 
-		$data = $this->cache[$ip_prefix] = $this->driver->get($ip_prefix);
+		$data = $this->driver->get($ip_prefix);
 
 		if (strlen($data) > 0)
 			return $this->cache[$ip_prefix] = explode(',', $data);
 		else
-			return array();
+			return $this->cache[$ip_prefix] = array();
 	}
 
 	private function SetData($ip_prefix, $data)
